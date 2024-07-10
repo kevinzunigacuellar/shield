@@ -14,12 +14,13 @@ model Application {
   resume         String
   name           String
   email          String
-  score          Int?      
+  score          Int?
+  job            Job      @relation(fields: [jobId], references: [id])
+  // automatically generated fields from xata
   xata_id        String   @unique(map: "Application__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int      @default(0)
   xata_createdat DateTime @default(now()) @db.Timestamptz(6)
   xata_updatedat DateTime @default(now()) @db.Timestamptz(6)
-  job            Job      @relation(fields: [jobId], references: [id])
 }
 
 model Job {
@@ -28,9 +29,10 @@ model Job {
   description    String
   text           String
   userId         String
+  applications   Application[]
+  // automatically generated fields from xata
   xata_id        String        @unique(map: "Job__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int           @default(0)
   xata_createdat DateTime      @default(now()) @db.Timestamptz(6)
   xata_updatedat DateTime      @default(now()) @db.Timestamptz(6)
-  applications   Application[]
 }

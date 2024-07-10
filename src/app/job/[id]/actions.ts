@@ -51,5 +51,5 @@ export async function createApplication(jobId: string, formData: FormData) {
   });
 
   console.log("Sent event");
-  redirect("/")
+  redirect("/");
 }

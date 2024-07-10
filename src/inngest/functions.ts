@@ -19,7 +19,7 @@ export const scoreApplicantResume = inngest.createFunction(
       },
       select: {
         resume: true,
-      }
+      },
     });
 
     const job = await prisma.job.findUnique({
@@ -29,15 +29,15 @@ export const scoreApplicantResume = inngest.createFunction(
       select: {
         title: true,
         text: true,
-      }
+      },
     });
 
     if (!application || !job) {
       return;
     }
 
-    console.log(application)
-    console.log(job)
+    console.log(application);
+    console.log(job);
 
     const reply = await step.run("calculate-score", async () => {
       // TODO: Implement a function to calculate the score
@@ -45,17 +45,16 @@ export const scoreApplicantResume = inngest.createFunction(
     });
 
     await step.run("add-score-to-application", async () => {
-      
       return await prisma.application.update({
         where: {
           id: event.data.applicationId,
         },
         data: {
           score: reply,
-        }
-      })
+        },
+      });
     });
 
     return { event, body: "Score calculated and added to the application" };
-  }
+  },
 );
