@@ -4,6 +4,7 @@ import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 const jobSchema = z.object({
   title: z.string().min(3).trim(),
@@ -34,5 +35,6 @@ export async function createJob(data: unknown) {
     },
   });
 
+  revalidatePath(`/dashboard`);
   redirect(`/job/${job.id}`);
 }
