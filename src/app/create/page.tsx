@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { createJob } from "@/app/dashboard/actions";
+import { createJob } from "@/app/create/actions";
 
 export default function JobCreationPage() {
   const [jobTitle, setJobTitle] = useState("");
@@ -36,7 +36,7 @@ export default function JobCreationPage() {
     },
   });
 
-  const createJobWithStuff = createJob.bind(null, {
+  const createJobWithArgs = createJob.bind(null, {
     title: jobTitle,
     description: editor?.getHTML(),
   });
@@ -67,7 +67,7 @@ export default function JobCreationPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <form className="grid gap-6" action={createJobWithStuff}>
+          <form className="grid gap-6" action={createJobWithArgs}>
             <div className="grid gap-2">
               <Label htmlFor="job-title" className="text-sm font-medium">
                 Job Title

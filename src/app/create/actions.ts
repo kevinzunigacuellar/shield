@@ -38,3 +38,8 @@ export async function createJob(data: unknown) {
   revalidatePath(`/dashboard`);
   redirect(`/job/${job.id}`);
 }
+
+export async function createApplication(formData: FormData) {
+  console.log("createApplication");
+  console.log(formData);
+}

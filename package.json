@@ -17,6 +17,7 @@
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",
+    "@types/sanitize-html": "^2.11.0",
     "@xata.io/client": "0.0.0-next.v0bff19eb2ff4a0bbcef7cd1a58e23bd4db0b6d49",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -25,9 +26,12 @@
     "next": "14.2.4",
     "react": "^18",
     "react-dom": "^18",
+    "sanitize-html": "^2.13.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
-    "zod": "^3.23.8"
+    "uploadthing": "^6.13.2",
+    "zod": "^3.23.8",
+    "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.13",
