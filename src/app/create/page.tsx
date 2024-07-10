@@ -18,6 +18,7 @@ import StarterKit from "@tiptap/starter-kit";
 import { createJob } from "@/app/dashboard/actions";
 
 export default function JobCreationPage() {
+  const [jobTitle, setJobTitle] = useState("");
   const editor = useEditor({
     extensions: [
       StarterKit.configure({
@@ -26,7 +27,6 @@ export default function JobCreationPage() {
         },
       }),
     ],
-    content: "<p>Hello World! 🌎️</p>",
     editorProps: {
       attributes: {
         class:
@@ -35,12 +35,11 @@ export default function JobCreationPage() {
       },
     },
   });
-  const [jobTitle, setJobTitle] = useState("");
 
   const createJobWithStuff = createJob.bind(null, {
     title: jobTitle,
     description: editor?.getHTML(),
-  })
+  });
 
   const toggleHeading2 = useCallback(() => {
     editor?.chain().focus().toggleHeading({ level: 2 }).run();
@@ -59,7 +58,7 @@ export default function JobCreationPage() {
   }, [editor]);
 
   return (
-    <main className="py-10">
+    <main className="py-16">
       <Card className="w-full max-w-3xl mx-auto p-6 sm:p-8 md:p-10">
         <CardHeader>
           <CardTitle className="text-3xl font-bold">Create a Job</CardTitle>
@@ -73,9 +72,12 @@ export default function JobCreationPage() {
               <Label htmlFor="job-title" className="text-sm font-medium">
                 Job Title
               </Label>
-              <Input id="job-title" placeholder="Enter job title" onChange={
-                  (e) => setJobTitle(e.target.value)
-              } />
+              <Input
+                id="job-title"
+                required
+                placeholder="Frontend Engineer"
+                onChange={(e) => setJobTitle(e.target.value)}
+              />
             </div>
             <div className="grid gap-2">
               <Label htmlFor="job-description" className="text-sm font-medium">
@@ -84,7 +86,11 @@ export default function JobCreationPage() {
               <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
                 <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
                   <Button
-                    variant="ghost"
+                    variant={
+                      editor?.isActive("heading", { level: 2 })
+                        ? "secondary"
+                        : "ghost"
+                    }
                     size="icon"
                     onClick={toggleHeading2}
                     type="button"
@@ -93,7 +99,11 @@ export default function JobCreationPage() {
                     <span className="sr-only">Heading 2</span>
                   </Button>
                   <Button
-                    variant="ghost"
+                    variant={
+                      editor?.isActive("heading", { level: 3 })
+                        ? "secondary"
+                        : "ghost"
+                    }
                     size="icon"
                     onClick={toggleHeading3}
                     type="button"
