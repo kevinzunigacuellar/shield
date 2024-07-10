@@ -4,6 +4,8 @@ import { utapi } from "@/lib/uploadthing";
 import { prisma } from "@/lib/prisma";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
+import { inngest } from "@/inngest";
+import { redirect } from "next/navigation";
 
 const ApplicationFormSchema = zfd.formData({
   name: zfd.text(),
@@ -31,20 +33,23 @@ export async function createApplication(jobId: string, formData: FormData) {
     };
   }
 
-  try {
-    await prisma.application.create({
-      data: {
-        jobId,
-        name,
-        email,
-        resume: data.url,
-      },
-    });
-  } catch (error) {
-    return {
-      errors: {
-        resume: "Failed to create job application",
-      },
-    };
-  }
+  const newApplication = await prisma.application.create({
+    data: {
+      jobId,
+      name,
+      email,
+      resume: data.url,
+    },
+  });
+
+  await inngest.send({
+    name: "app/application.sent",
+    data: {
+      jobId,
+      applicationId: newApplication.id,
+    },
+  });
+
+  console.log("Sent event");
+  redirect("/")
 }

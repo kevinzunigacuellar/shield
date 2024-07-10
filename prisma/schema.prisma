@@ -14,6 +14,7 @@ model Application {
   resume         String
   name           String
   email          String
+  score          Int?      
   xata_id        String   @unique(map: "Application__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int      @default(0)
   xata_createdat DateTime @default(now()) @db.Timestamptz(6)
@@ -25,6 +26,7 @@ model Job {
   id             String        @id @default(cuid())
   title          String
   description    String
+  text           String
   userId         String
   xata_id        String        @unique(map: "Job__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int           @default(0)

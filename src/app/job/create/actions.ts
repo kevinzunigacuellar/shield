@@ -7,8 +7,9 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 const jobSchema = z.object({
-  title: z.string().min(3).trim(),
-  description: z.string().min(10).trim(),
+  title: z.string().trim().min(3),
+  description: z.string().trim().min(10),
+  text: z.string().trim().min(10),
 });
 
 export async function createJob(data: unknown) {
@@ -32,14 +33,10 @@ export async function createJob(data: unknown) {
       title: validData.data.title,
       description: validData.data.description,
       userId,
+      text: validData.data.text,
     },
   });
 
   revalidatePath(`/dashboard`);
   redirect(`/job/${job.id}`);
-}
-
-export async function createApplication(formData: FormData) {
-  console.log("createApplication");
-  console.log(formData);
 }

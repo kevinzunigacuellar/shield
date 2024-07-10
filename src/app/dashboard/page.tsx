@@ -1,25 +1,27 @@
-import { prisma } from "@/lib/prisma"
-import { currentUser } from "@clerk/nextjs/server"
-
+import { prisma } from "@/lib/prisma";
+import { auth } from "@clerk/nextjs/server";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
-  const user = await currentUser()
+  const { userId } = auth();
 
-  if (!user) {
-    return new Error('User not found')
+  if (!userId) {
+    redirect("/sign-in");
   }
   const applications = await prisma.job.findMany({
     where: {
-      userId: user.id
-    }
-  })
+      userId: userId,
+    },
+    select: {
+      id: true,
+      title: true,
+    },
+  });
 
   return (
     <main>
       <h1>Dashboard</h1>
-      <pre>
-        {JSON.stringify(applications, null, 2)}
-      </pre>
+      <pre>{JSON.stringify(applications, null, 2)}</pre>
     </main>
-  )
+  );
 }

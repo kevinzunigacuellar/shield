@@ -15,7 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { createJob } from "@/app/create/actions";
+import { createJob } from "@/app/job/create/actions";
 
 export default function JobCreationPage() {
   const [jobTitle, setJobTitle] = useState("");
@@ -39,6 +39,7 @@ export default function JobCreationPage() {
   const createJobWithArgs = createJob.bind(null, {
     title: jobTitle,
     description: editor?.getHTML(),
+    text: editor?.getText(),
   });
 
   const toggleHeading2 = useCallback(() => {
