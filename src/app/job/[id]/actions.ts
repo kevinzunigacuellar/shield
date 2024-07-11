@@ -7,28 +7,30 @@ import { z } from "zod";
 import { inngest } from "@/inngest";
 import { redirect } from "next/navigation";
 
-const ApplicationFormSchema = zfd.formData({
+const applicationFormSchema = zfd.formData({
   name: zfd.text(),
   email: z.string().email(),
-  resume: zfd.file(),
+  resume: zfd.file(z.instanceof(File, { message: "Must submit a pdf file" })),
+  jobId: zfd.text(),
 });
 
-export async function createApplication(jobId: string, formData: FormData) {
-  const parsed = ApplicationFormSchema.safeParse(formData);
+export async function createApplication(_: any, formData: FormData) {
+  const parsed = applicationFormSchema.safeParse(formData);
 
   if (!parsed.success) {
-    return parsed.error.flatten().fieldErrors;
+    return {
+      errors: parsed.error.flatten().fieldErrors,
+    };
   }
 
-  const { name, email, resume } = parsed.data;
+  const { name, email, resume, jobId } = parsed.data;
   const [fileUpload] = await utapi.uploadFiles([resume]);
-
   const { data, error: fileUploadError } = fileUpload;
 
   if (fileUploadError || !data) {
     return {
       errors: {
-        resume: "Failed to upload resume",
+        resume: "Failed to upload resume, try again later",
       },
     };
   }
@@ -40,6 +42,9 @@ export async function createApplication(jobId: string, formData: FormData) {
       email,
       resume: data.url,
     },
+    select: {
+      id: true,
+    },
   });
 
   await inngest.send({
@@ -50,6 +55,5 @@ export async function createApplication(jobId: string, formData: FormData) {
     },
   });
 
-  console.log("Sent event");
   redirect("/");
 }

@@ -36,12 +36,9 @@ export const scoreApplicantResume = inngest.createFunction(
       return;
     }
 
-    console.log(application);
-    console.log(job);
-
     const reply = await step.run("calculate-score", async () => {
       // TODO: Implement a function to calculate the score
-      return 70;
+      return Math.random() * 100;
     });
 
     await step.run("add-score-to-application", async () => {
