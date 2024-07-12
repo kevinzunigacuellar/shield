@@ -1,7 +1,7 @@
 "use server";
 
 import { utapi } from "@/lib/uploadthing";
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { inngest } from "@/inngest";

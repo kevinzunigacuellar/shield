@@ -8,11 +8,24 @@ import { Heading2Icon, Heading3Icon, BoldIcon, ItalicIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { createJob } from "@/app/job/create/actions";
+import { SubmitButton } from "./submit-button";
 
-export default function JobCreateForm() {
-  const [jobTitle, setJobTitle] = useState("");
+interface JobFormProps {
+  initialTitle?: string;
+  initialDescriptionHtml?: string;
+  jobId?: string;
+  action: any;
+}
+
+export default function JobForm({
+  initialTitle = "",
+  initialDescriptionHtml = "",
+  action,
+  jobId,
+}: JobFormProps) {
+  const [jobTitle, setJobTitle] = useState(initialTitle);
   const editor = useEditor({
+    content: initialDescriptionHtml,
     extensions: [
       StarterKit.configure({
         heading: {
@@ -29,10 +42,11 @@ export default function JobCreateForm() {
     },
   });
 
-  const createJobWithArgs = createJob.bind(null, {
+  const createJobWithArgs = action.bind(null, {
     title: jobTitle,
     description: editor?.getHTML(),
     text: editor?.getText(),
+    id: jobId,
   });
 
   const toggleHeading2 = useCallback(() => {
@@ -62,6 +76,7 @@ export default function JobCreateForm() {
           required
           placeholder="Frontend Engineer"
           onChange={(e) => setJobTitle(e.target.value)}
+          value={jobTitle}
         />
       </div>
       <div className="grid gap-2">
@@ -119,9 +134,7 @@ export default function JobCreateForm() {
           <EditorContent editor={editor} className="w-full" />
         </div>
       </div>
-      <Button type="submit" variant="default" className="w-full">
-        Create Job
-      </Button>
+      <SubmitButton />
     </form>
   );
 }

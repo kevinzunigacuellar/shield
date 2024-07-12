@@ -14,8 +14,9 @@ export default function HeaderMenu() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
-          <Shield className="h-6 w-6 fill-primary stroke-none" />
-          <span className="sr-only">Acme Inc</span>
+          <Shield className="h-6 w-6 fill-black" />
+
+          <span className="sr-only">Shield</span>
         </Link>
         {navigation.map((item) => (
           <Link

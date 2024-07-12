@@ -1,7 +1,6 @@
 "use client";
 
 import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Card,
@@ -11,7 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { createApplication } from "./actions";
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormState } from "react-dom";
+import { SubmitButton } from "@/components/submit-button";
 
 export function ApplicationForm({ jobId }: { jobId: string }) {
   const [state, formAction] = useFormState(createApplication, null);
@@ -85,9 +85,4 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
       </CardContent>
     </Card>
   );
-}
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return <Button>{pending ? "Submitting..." : "Submit"}</Button>;
 }

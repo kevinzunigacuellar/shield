@@ -1,7 +1,8 @@
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import { Shield } from "lucide-react";
 import { Metadata } from "next";
+import { buttonVariants } from "@/components/ui/button";
+import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 
 export const metadata: Metadata = {
   title: "Shield",
@@ -11,14 +12,31 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-dvh">
-      <header className="flex items-center justify-between px-4 py-3 lg:px-6 border-b bg-background">
-        <Link href="#" className="flex items-center" prefetch={false}>
-          <Shield className="h-6 w-6" />
+    <div className="flex flex-col min-h-dvh bg-muted/40">
+      <header className="flex items-center justify-between px-4 py-3 lg:px-6 border-b bg-background h-16">
+        <Link href="/" className="flex items-center" prefetch={false}>
+          <Shield className="h-6 w-6 fill-black" />
           <span className="sr-only">Acme Inc</span>
         </Link>
         <div className="flex items-center gap-4">
-          <Button variant="outline">Login</Button>
+          <SignedOut>
+            <SignInButton>
+              <Link
+                className={buttonVariants({ variant: "outline", size: "sm" })}
+                href="/sign-in"
+              >
+                Sign In
+              </Link>
+            </SignInButton>
+          </SignedOut>
+          <SignedIn>
+            <Link
+              className={buttonVariants({ variant: "outline", size: "sm" })}
+              href="/dashboard"
+            >
+              Dashboard
+            </Link>
+          </SignedIn>
         </div>
       </header>
       <main className="flex-1 flex items-center justify-center px-4">
@@ -26,13 +44,13 @@ export default function LandingPage() {
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
             Shield
           </h1>
-          <p className="max-w-[700px] text-muted-foreground md:text-xl">
-            Job board powered by AI to help you find the best candidates for
-            your company.
+          <p className="max-w-2xl text-muted-foreground md:text-lg">
+            Job platform powered by AI to help you find the best candidates.
+            Post your job and let us do the rest
           </p>
           <Link
-            href="#"
-            className="inline-flex h-10 items-center justify-center rounded-md bg-primary px-8 text-sm font-medium text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
+            href="/sign-up"
+            className={buttonVariants({ variant: "default", size: "lg" })}
             prefetch={false}
           >
             Get Started

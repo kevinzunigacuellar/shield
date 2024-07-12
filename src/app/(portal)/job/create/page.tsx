@@ -5,7 +5,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import JobCreateForm from "./job-form";
+import JobCreateForm from "@/components/job-form";
+import { createJob } from "@/app/(portal)/job/actions";
 
 export default function JobCreationPage() {
   return (
@@ -18,7 +19,7 @@ export default function JobCreationPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <JobCreateForm />
+          <JobCreateForm action={createJob} />
         </CardContent>
       </Card>
     </main>

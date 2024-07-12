@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 
@@ -8,6 +8,7 @@ export default async function Dashboard() {
   if (!userId) {
     redirect("/sign-in");
   }
+  
   const applications = await prisma.job.findMany({
     where: {
       userId: userId,

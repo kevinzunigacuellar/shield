@@ -1,12 +1,12 @@
-import HeaderMenu from "@/components/HeaderMenu";
 import type { Metadata } from "next";
+import HeaderMenu from "@/app/(portal)/portal-menu";
 
 export const metadata: Metadata = {
   title: "Create a new job posting",
   description: "Fill out the form below to create a new job posting",
 };
 
-export default function RootLayout({
+export default function Layout({
   children,
 }: Readonly<{
   children: React.ReactNode;
