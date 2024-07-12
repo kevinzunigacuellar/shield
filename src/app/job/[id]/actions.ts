@@ -55,5 +55,5 @@ export async function createApplication(_: any, formData: FormData) {
     },
   });
 
-  redirect("/");
+  redirect("/success");
 }

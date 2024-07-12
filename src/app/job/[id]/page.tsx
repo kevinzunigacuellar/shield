@@ -2,48 +2,45 @@ import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
 import { ApplicationForm } from "./application-form";
-import type { Metadata, ResolvingMetadata } from 'next'
- 
+import type { Metadata, ResolvingMetadata } from "next";
+
 type Props = {
-  params: { id: string }
-  
-}
+  params: { id: string };
+};
 
 export async function generateMetadata(
   { params }: Props,
-  parent: ResolvingMetadata
+  parent: ResolvingMetadata,
 ): Promise<Metadata> {
   // fetch data
-  const job = await prisma.job
-    .findUnique({
-      where: {
-        id: params.id,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-      },
-    })
- 
+  const job = await prisma.job.findUnique({
+    where: {
+      id: params.id,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+    },
+  });
+
   return {
-    title: job?.title || 'Job not found',
-    description: job?.description || 'Job not found',
-  }
+    title: job?.title || "Job not found",
+    description: job?.description || "Job not found",
+  };
 }
 
 export default async function JobPage({ params }: { params: { id: string } }) {
-  const job = await prisma.job
-    .findUnique({
-      where: {
-        id: params.id,
-      },
-      select: {
-        id: true,
-        title: true,
-        description: true,
-      },
-    })
+  const job = await prisma.job.findUnique({
+    where: {
+      id: params.id,
+    },
+    select: {
+      id: true,
+      title: true,
+      description: true,
+    },
+  });
 
   if (!job) {
     notFound();

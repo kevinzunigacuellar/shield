@@ -6,9 +6,10 @@ export default function JobPost404() {
           Oops, the job you were looking for does not exist
         </h2>
         <p className="mt-4 text-muted-foreground">
-          The page you requested could not be found. Please check the URL or try again later.
+          The page you requested could not be found. Please check the URL or try
+          again later.
         </p>
       </div>
     </div>
-  )
+  );
 }
