@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import HeaderMenu from "@/components/HeaderMenu";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Create a new job posting",
