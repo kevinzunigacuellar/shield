@@ -1,3 +1,3 @@
 # Shield
 
-Secret project 
+AI powered job posting analysis tool
