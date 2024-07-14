@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Menu, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { UserButton } from "@clerk/nextjs";
+import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navigation = [{ name: "Dashboard", href: "/dashboard" }];
@@ -56,7 +56,12 @@ export default function HeaderMenu() {
           </nav>
         </SheetContent>
       </Sheet>
-      <UserButton />
+      <ClerkLoading>
+        <span className="h-7 w-7 rounded-full bg-slate-200 animate-pulse"></span>
+      </ClerkLoading>
+      <ClerkLoaded>
+        <UserButton />
+      </ClerkLoaded>
     </header>
   );
 }

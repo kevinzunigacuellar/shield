@@ -7,6 +7,12 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Dashboard",
+  description: "Dashboard for the shield job portal",
+};
 
 export default async function Dashboard() {
   const { userId } = auth();
@@ -27,7 +33,7 @@ export default async function Dashboard() {
   return (
     <main>
       <h1 className="sr-only">Dashboard</h1>
-      <Card className="min-h-96 flex flex-col">
+      <Card className={cn("flex flex-col", { "h-[450px]": !jobs.length })}>
         <div className="p-6 px-7 flex flex-col gap-3 sm:flex-row sm:justify-between items-center">
           <div className="flex flex-col gap-1.5 w-full sm:w-auto">
             <h3 className="font-semibold leading-none tracking-tight">Jobs</h3>
@@ -44,7 +50,7 @@ export default async function Dashboard() {
             </Link>
           ) : null}
         </div>
-        <CardContent className={cn(jobs.length ? "" : "flex flex-1")}>
+        <CardContent className={cn({ "flex flex-1": !jobs.length })}>
           {jobs.length ? (
             <DataTable columns={columns} data={jobs} />
           ) : (
@@ -58,7 +64,7 @@ export default async function Dashboard() {
               <Link
                 href="/job/create"
                 className={buttonVariants({
-                  className: "mt-4",
+                  className: "mt-3",
                 })}
               >
                 Create a new job
