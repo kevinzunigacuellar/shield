@@ -22,13 +22,16 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DataTableColumnHeader } from "@/components/column-header";
+import { useToast } from "@/components/ui/use-toast";
 import { deleteJob } from "../jobs/actions";
 import Link from "next/link";
+import { tc } from "@/lib/utils";
 
 type Job = {
   id: string;
   title: string;
   xata_createdat: Date;
+  userId: string;
 };
 
 export const columns: ColumnDef<Job>[] = [
@@ -66,6 +69,8 @@ export const columns: ColumnDef<Job>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
+      // eslint-disable-next-line react-hooks/rules-of-hooks
+      const { toast } = useToast();
       const job = row.original;
       return (
         <Dialog>
@@ -106,8 +111,21 @@ export const columns: ColumnDef<Job>[] = [
               </DialogClose>
               <DialogClose asChild>
                 <Button
+                  variant="destructive"
                   onClick={async () => {
-                    await deleteJob(job.id);
+                    const { error } = await tc(deleteJob(job.id, job.userId));
+                    if (error) {
+                      toast({
+                        title: "Something went wrong",
+                        description: error.message,
+                        variant: "destructive",
+                      });
+                    } else {
+                      toast({
+                        title: "Job deleted",
+                        description: "The job has been successfully deleted.",
+                      });
+                    }
                   }}
                 >
                   Delete

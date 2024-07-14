@@ -15,10 +15,7 @@ export default function UnauthorizedPage() {
           contact the site administrator if you believe this is an error.
         </p>
         <div className="mt-6">
-          <Link
-            href="/"
-            className={buttonVariants({ variant: "default" })}
-          >
+          <Link href="/" className={buttonVariants({ variant: "default" })}>
             Go to Homepage
           </Link>
         </div>
