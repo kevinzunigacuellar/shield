@@ -1,8 +1,8 @@
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { DataTable } from "../../../components/data-table";
-import { columns } from "./job-columns";
+import { DataTable } from "@/components/data-table";
+import { columns } from "../dashboard/job-columns";
 import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
@@ -27,6 +27,13 @@ export default async function Dashboard() {
     },
     orderBy: {
       xata_createdat: "desc",
+    },
+    include: {
+      _count: {
+        select: {
+          applications: true,
+        },
+      },
     },
   });
 

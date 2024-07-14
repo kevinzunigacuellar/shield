@@ -38,8 +38,8 @@ export async function createJob(data: unknown) {
     },
   });
 
-  revalidatePath(`/dashboard`);
-  redirect(`/dashboard`);
+  revalidatePath(`/jobs`);
+  redirect(`/jobs`);
 }
 
 export async function updateJob(data: unknown) {
@@ -74,7 +74,7 @@ export async function updateJob(data: unknown) {
   });
 
   revalidatePath(`/dashboard`);
-  redirect(`/dashboard`);
+  redirect(`/jobs`);
 }
 
 export async function deleteJob(jobId: string, ownerId: string) {
@@ -96,5 +96,5 @@ export async function deleteJob(jobId: string, ownerId: string) {
   } catch (e) {
     throw new Error("Something went wrong, please try again later.");
   }
-  revalidatePath(`/dashboard`);
+  revalidatePath(`/jobs`);
 }

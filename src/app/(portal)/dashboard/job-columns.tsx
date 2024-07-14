@@ -32,6 +32,9 @@ type Job = {
   title: string;
   xata_createdat: Date;
   userId: string;
+  _count: {
+    applications: number;
+  };
 };
 
 export const columns: ColumnDef<Job>[] = [
@@ -65,6 +68,10 @@ export const columns: ColumnDef<Job>[] = [
         </span>
       );
     },
+  },
+  {
+    accessorKey: "_count.applications",
+    header: "No. of applications",
   },
   {
     id: "actions",
