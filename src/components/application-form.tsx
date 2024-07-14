@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { createApplication } from "./actions";
+import { createApplication } from "@/actions/application-actions";
 import { useFormState } from "react-dom";
 import { SubmitButton } from "@/components/submit-button";
 

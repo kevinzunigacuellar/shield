@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import JobEditForm from "@/components/job-form";
-import { updateJob } from "@/app/(portal)/jobs/actions";
+import { updateJob } from "@/actions/job-actions";
 import prisma from "@/lib/prisma";
 import { notFound, redirect } from "next/navigation";
 import { auth } from "@clerk/nextjs/server";

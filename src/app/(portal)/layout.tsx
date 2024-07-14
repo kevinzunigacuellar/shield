@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import HeaderMenu from "@/app/(portal)/portal-menu";
+import HeaderMenu from "@/components/portal-menu";
 
 export const metadata: Metadata = {
   title: "Create a new job posting",

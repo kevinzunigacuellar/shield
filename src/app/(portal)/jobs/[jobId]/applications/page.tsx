@@ -2,7 +2,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataTable } from "@/components/data-table";
-import { columns } from "./application-columns";
+import { columns } from "@/components/columns/application-columns";
 import Link from "next/link";
 import {
   Card,

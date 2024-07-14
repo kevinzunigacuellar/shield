@@ -73,7 +73,7 @@ export async function updateJob(data: unknown) {
     },
   });
 
-  revalidatePath(`/dashboard`);
+  revalidatePath(`/jobs`);
   redirect(`/jobs`);
 }
 

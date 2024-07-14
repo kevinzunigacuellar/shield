@@ -23,7 +23,7 @@ import {
 } from "@/components/ui/dialog";
 import { DataTableColumnHeader } from "@/components/column-header";
 import { useToast } from "@/components/ui/use-toast";
-import { deleteJob } from "../jobs/actions";
+import { deleteJob } from "@/actions/job-actions";
 import Link from "next/link";
 import { tc } from "@/lib/utils";
 

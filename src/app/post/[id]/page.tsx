@@ -1,7 +1,7 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
-import { ApplicationForm } from "./application-form";
+import { ApplicationForm } from "@/components/application-form";
 import type { Metadata, ResolvingMetadata } from "next";
 
 type Props = {
