@@ -29,7 +29,7 @@ export async function createJob(data: unknown) {
     redirect("/sign-in");
   }
 
-  const job = await prisma.job.create({
+  await prisma.job.create({
     data: {
       title: validData.data.title,
       description: validData.data.description,
@@ -53,7 +53,7 @@ export async function updateJob(data: unknown) {
   const { userId } = auth();
 
   if (!userId) {
-    return;
+    redirect("/sign-in");
   }
 
   const { id, title, description, text } = parsed.data;
@@ -62,7 +62,7 @@ export async function updateJob(data: unknown) {
     return;
   }
 
-  const job = await prisma.job.update({
+  await prisma.job.update({
     where: {
       id: id,
     },

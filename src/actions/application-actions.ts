@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { zfd } from "zod-form-data";
 import { z } from "zod";
 import { inngest } from "@/inngest";
-import { redirect } from "next/navigation"
+import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
 
@@ -94,4 +94,3 @@ export async function rejectApplication(applicationId: string, jobId: string) {
   }
   revalidatePath("/jobs/[jobId]/applications/page");
 }
-

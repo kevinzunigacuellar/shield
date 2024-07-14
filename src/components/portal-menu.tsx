@@ -4,7 +4,10 @@ import { Button } from "@/components/ui/button";
 import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
-const navigation = [{ name: "Dashboard", href: "/dashboard"}, {name: "Jobs", href: "/jobs" }];
+const navigation = [
+  { name: "Dashboard", href: "/dashboard" },
+  { name: "Jobs", href: "/jobs" },
+];
 
 export default function HeaderMenu() {
   return (
