@@ -54,6 +54,7 @@ export async function createApplication(_: any, formData: FormData) {
     data: {
       jobId,
       applicationId: newApplication.id,
+      email,
     },
   });
 

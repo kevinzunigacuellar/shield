@@ -1,5 +1,6 @@
 import { inngest } from "./client";
 import { CohereClient } from "cohere-ai";
+import { Resend } from "resend";
 
 export const scoreApplicantResume = inngest.createFunction(
   { id: "score-resume" }, // Each function should have a unique ID
@@ -79,5 +80,37 @@ export const scoreApplicantResume = inngest.createFunction(
       id: score.id,
       score: score.score,
     };
+  },
+);
+
+export const sendConfirmationEmail = inngest.createFunction(
+  { id: "send-confirmation-email" },
+  { event: "app/application.sent" },
+
+  async ({ event, step, prisma }) => {
+    const applicationData = await step.run("get-application-data", async () => {
+      const application = await prisma.application.findUnique({
+        where: {
+          id: event.data.applicationId,
+        },
+      });
+
+      if (!application) {
+        throw new Error("Application not found");
+      }
+
+      return application;
+    });
+
+    await step.run("send-email", () => {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+
+      return resend.emails.send({
+        from: "Shield <onboarding@resend.dev>",
+        to: applicationData.email,
+        subject: "Application Received",
+        text: `Your application has been received. Thank you for applying!`,
+      });
+    });
   },
 );
