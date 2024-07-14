@@ -5,7 +5,7 @@ import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 
 const navigation = [
-  { name: "Dashboard", href: "/dashboard" },
+  // { name: "Dashboard", href: "/dashboard" },
   { name: "Jobs", href: "/jobs" },
 ];
 

@@ -32,7 +32,7 @@ export default function LandingPage() {
           <SignedIn>
             <Link
               className={buttonVariants({ variant: "outline", size: "sm" })}
-              href="/dashboard"
+              href="/jobs"
             >
               Dashboard
             </Link>
