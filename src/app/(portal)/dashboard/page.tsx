@@ -43,7 +43,7 @@ export default async function Dashboard() {
           </div>
           {jobs.length ? (
             <Link
-              href="/job/create"
+              href="/jobs/create"
               className={buttonVariants({ className: "w-full sm:w-auto" })}
             >
               Create a new job
@@ -62,7 +62,7 @@ export default async function Dashboard() {
                 You can start posting as soon as you add a job
               </p>
               <Link
-                href="/job/create"
+                href="/jobs/create"
                 className={buttonVariants({
                   className: "mt-3",
                 })}

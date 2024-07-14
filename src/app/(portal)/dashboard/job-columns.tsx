@@ -22,7 +22,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { DataTableColumnHeader } from "@/components/column-header";
-import { deleteJob } from "../job/actions";
+import { deleteJob } from "../jobs/actions";
 import Link from "next/link";
 
 type Job = {
@@ -39,7 +39,7 @@ export const columns: ColumnDef<Job>[] = [
       const job = row.original;
       return (
         <Link
-          href={`/jobs/applications/${job.id}`}
+          href={`/jobs/${job.id}/applications`}
           className="underline-offset-4 hover:underline"
         >
           {job.title}
@@ -79,7 +79,7 @@ export const columns: ColumnDef<Job>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link href={`/job/edit/${job.id}`}>Edit</Link>
+                <Link href={`/jobs/edit/${job.id}`}>Edit</Link>
               </DropdownMenuItem>
               <DialogTrigger asChild>
                 <DropdownMenuItem>Delete</DropdownMenuItem>

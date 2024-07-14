@@ -6,7 +6,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import JobCreateForm from "@/components/job-form";
-import { createJob } from "@/app/(portal)/job/actions";
+import { createJob } from "@/app/(portal)/jobs/actions";
 
 export default function JobCreationPage() {
   return (
