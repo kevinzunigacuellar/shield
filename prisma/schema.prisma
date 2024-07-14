@@ -15,7 +15,7 @@ model Application {
   name           String
   email          String
   score          Int?
-  job            Job      @relation(fields: [jobId], references: [id])
+  job            Job      @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   // automatically generated fields from xata
   xata_id        String   @unique(map: "Application__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int      @default(0)

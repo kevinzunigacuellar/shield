@@ -60,7 +60,7 @@ export async function createApplication(_: any, formData: FormData) {
   redirect("/success");
 }
 
-export async function deleteApplication(applicationId: string, jobId: string) {
+export async function rejectApplication(applicationId: string, jobId: string) {
   const { userId } = auth();
   if (!userId) {
     redirect(`/unauthorized`);

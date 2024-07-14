@@ -13,7 +13,7 @@ import {
 import { DataTableColumnHeader } from "@/components/column-header";
 import { useToast } from "@/components/ui/use-toast";
 import Link from "next/link";
-import { deleteApplication } from "@/actions/application-actions";
+import { rejectApplication } from "@/actions/application-actions";
 import { tc } from "@/lib/utils";
 
 type Applications = {
@@ -90,7 +90,7 @@ export const columns: ColumnDef<Applications>[] = [
             <DropdownMenuItem
               onSelect={async () => {
                 const { error } = await tc(
-                  deleteApplication(application.id, application.jobId),
+                  rejectApplication(application.id, application.jobId),
                 );
                 if (error) {
                   toast({
