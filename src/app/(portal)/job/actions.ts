@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { z } from "zod";
 import prisma from "@/lib/prisma";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 const jobSchema = z.object({
@@ -44,7 +44,6 @@ export async function createJob(data: unknown) {
 
 export async function updateJob(data: unknown) {
   const parsed = jobSchema.safeParse(data);
-  console.log(parsed);
   if (!parsed.success) {
     return {
       errors: parsed.error.flatten().fieldErrors,
@@ -76,4 +75,37 @@ export async function updateJob(data: unknown) {
 
   revalidatePath(`/dashboard`);
   redirect(`/dashboard`);
+}
+
+export async function deleteJob(jobId: string) {
+  const { userId } = auth();
+
+  if (!userId) {
+    redirect("/sign-in");
+  }
+
+  const job = await prisma.job.findUnique({
+    where: {
+      id: jobId,
+    },
+    select: {
+      userId: true,
+    },
+  });
+
+  if (!job) {
+    notFound();
+  }
+
+  if (job.userId !== userId) {
+    redirect(`/unauthorized`);
+  }
+
+  await prisma.job.delete({
+    where: {
+      id: jobId,
+    },
+  });
+
+  revalidatePath(`/dashboard`);
 }

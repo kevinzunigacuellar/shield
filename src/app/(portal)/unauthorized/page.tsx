@@ -17,7 +17,7 @@ export default function UnauthorizedPage() {
         <div className="mt-6">
           <Link
             href="/dashboard"
-            className={buttonVariants({ variant: "default", size: "sm" })}
+            className={buttonVariants({ variant: "default" })}
           >
             Go to Dashboard
           </Link>

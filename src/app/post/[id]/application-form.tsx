@@ -26,7 +26,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
       <CardContent>
         <form className="space-y-4 w-full" action={formAction}>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <div>
+            <div className="flex flex-col gap-2">
               <Label htmlFor="name">Name</Label>
               <Input name="name" id="name" placeholder="John Doe" />
               {
@@ -41,7 +41,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
                 )
               }
             </div>
-            <div>
+            <div className="flex flex-col gap-2">
               <Label htmlFor="email">Email</Label>
               <Input
                 name="email"
@@ -62,7 +62,7 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
               }
             </div>
           </div>
-          <div>
+          <div className="flex flex-col gap-2">
             <Label htmlFor="resume">Resume</Label>
             <Input id="resume" name="resume" type="file" />
             {

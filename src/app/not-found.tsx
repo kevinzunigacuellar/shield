@@ -5,7 +5,7 @@ import { buttonVariants } from "@/components/ui/button";
 export const metadata: Metadata = {
   title: "Page Not Found",
   description: "The page you requested could not be found",
-}
+};
 
 export default function Portal404() {
   return (
@@ -19,10 +19,7 @@ export default function Portal404() {
           again later.
         </p>
         <div className="mt-6">
-          <Link
-            href="/"
-            className={buttonVariants({ variant: "default", size: "sm" })}
-          >
+          <Link href="/" className={buttonVariants({ variant: "default" })}>
             Go to Homepage
           </Link>
         </div>

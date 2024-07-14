@@ -36,7 +36,7 @@ export default function JobForm({
     editorProps: {
       attributes: {
         class:
-          "w-full block focus:outline-none bg-background px-4 py-3 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg",
+          "w-full block focus:outline-none bg-background px-4 py-3 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg prose-sm",
         id: "job-description",
       },
     },
@@ -83,7 +83,7 @@ export default function JobForm({
         <Label htmlFor="job-description" className="text-sm font-medium">
           Job Description
         </Label>
-        <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+        <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
           <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
             <Button
               variant={
