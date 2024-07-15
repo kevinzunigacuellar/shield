@@ -26,6 +26,16 @@ export async function createApplication(_: any, formData: FormData) {
   }
 
   const { name, email, resume, jobId } = parsed.data;
+
+  // limit file size to 500kb
+  if (resume.size > 1024 * 500) {
+    return {
+      errors: {
+        resume: "File size must be less than 500kb",
+      },
+    };
+  }
+
   const [fileUpload] = await utapi.uploadFiles([resume]);
   const { data, error: fileUploadError } = fileUpload;
 

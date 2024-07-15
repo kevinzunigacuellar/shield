@@ -64,7 +64,13 @@ export function ApplicationForm({ jobId }: { jobId: string }) {
           </div>
           <div className="flex flex-col gap-2">
             <Label htmlFor="resume">Resume</Label>
-            <Input id="resume" name="resume" type="file" />
+            <Input
+              id="resume"
+              name="resume"
+              type="file"
+              accept=".pdf"
+              multiple={false}
+            />
             {
               // @ts-ignore
               state?.errors?.resume && (
