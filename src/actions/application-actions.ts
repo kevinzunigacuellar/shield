@@ -52,9 +52,7 @@ export async function createApplication(_: any, formData: FormData) {
   await inngest.send({
     name: "app/application.sent",
     data: {
-      jobId,
       applicationId: newApplication.id,
-      email,
     },
   });
 

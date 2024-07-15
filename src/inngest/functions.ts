@@ -8,34 +8,30 @@ export const scoreApplicantResume = inngest.createFunction(
 
   async ({ event, step, prisma }) => {
     const appjobData = await step.run("fetch-application-and-job", async () => {
-      const application = await prisma.application.findUnique({
+      const data = await prisma.application.findUnique({
         where: {
           id: event.data.applicationId,
         },
         select: {
           resume: true,
+          job: {
+            select: {
+              title: true,
+              text: true,
+            },
+          },
         },
       });
 
-      const job = await prisma.job.findUnique({
-        where: {
-          id: event.data.jobId,
-        },
-        select: {
-          title: true,
-          text: true,
-        },
-      });
-
-      if (!application || !job) {
+      if (!data) {
         throw new Error("Application or job not found");
       }
 
-      return { application, job };
+      return data;
     });
 
     const pdfText = await step.run("extract-text-from-pdf", async () => {
-      const pdfBuffer = await fetch(appjobData.application.resume).then((res) =>
+      const pdfBuffer = await fetch(appjobData.resume).then((res) =>
         res.arrayBuffer(),
       );
 
@@ -60,7 +56,7 @@ export const scoreApplicantResume = inngest.createFunction(
         token: process.env.COHERE_API_KEY,
       });
       const response = await cohere.chat({
-        message: `Based on the job post provided: ${appjobData.job.text} and the resume provided: ${pdfText}, generate a score from 0 to 100 indicating if the candidate is a fit for the job. Only output the score number`,
+        message: `Based on the job post provided: ${appjobData.job.title} ${appjobData.job.text} and the resume provided: ${pdfText}, generate a score from 0 to 100 indicating if the candidate is a fit for the job. Only output the score number`,
       });
       return response.text;
     });
