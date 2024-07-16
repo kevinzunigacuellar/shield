@@ -3,12 +3,19 @@
 import { Separator } from "@/components/ui/separator";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useCallback, useState } from "react";
-import { Heading2Icon, Heading3Icon, BoldIcon, ItalicIcon } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import {
+  Heading2Icon,
+  Heading3Icon,
+  Bold,
+  Italic,
+  ListOrdered,
+  List,
+} from "lucide-react";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { SubmitButton } from "./submit-button";
+import { SubmitButton } from "@/components/submit-button";
+import { ToolbarButton } from "@/components/toolbar-button";
 
 interface JobFormProps {
   initialTitle?: string;
@@ -49,22 +56,6 @@ export default function JobForm({
     id: jobId,
   });
 
-  const toggleHeading2 = useCallback(() => {
-    editor?.chain().focus().toggleHeading({ level: 2 }).run();
-  }, [editor]);
-
-  const toggleHeading3 = useCallback(() => {
-    editor?.chain().focus().toggleHeading({ level: 3 }).run();
-  }, [editor]);
-
-  const toggleBold = useCallback(() => {
-    editor?.chain().focus().toggleBold().run();
-  }, [editor]);
-
-  const toggleItalic = useCallback(() => {
-    editor?.chain().focus().toggleItalic().run();
-  }, [editor]);
-
   return (
     <form className="grid gap-6" action={createJobWithArgs}>
       <div className="grid gap-2">
@@ -85,51 +76,92 @@ export default function JobForm({
         </Label>
         <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
           <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
-            <Button
-              variant={
-                editor?.isActive("heading", { level: 2 })
-                  ? "secondary"
-                  : "ghost"
+            <ToolbarButton
+              onClick={() =>
+                editor?.chain().focus().toggleHeading({ level: 2 }).run()
               }
-              size="icon"
-              onClick={toggleHeading2}
-              type="button"
-            >
-              <Heading2Icon className="h-5 w-5" />
-              <span className="sr-only">Heading 2</span>
-            </Button>
-            <Button
-              variant={
-                editor?.isActive("heading", { level: 3 })
-                  ? "secondary"
-                  : "ghost"
+              disabled={
+                !editor
+                  ?.can()
+                  .chain()
+                  .focus()
+                  .toggleHeading({ level: 2 })
+                  .run() || editor?.isActive("codeBlock")
               }
-              size="icon"
-              onClick={toggleHeading3}
-              type="button"
+              isActive={editor?.isActive("heading", { level: 2 })}
+              tooltip="Heading 2"
+              aria-label="Heading 2"
             >
-              <Heading3Icon className="h-5 w-5" />
-              <span className="sr-only">Heading 3</span>
-            </Button>
+              <Heading2Icon className="size-5" />
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() =>
+                editor?.chain().focus().toggleHeading({ level: 3 }).run()
+              }
+              disabled={
+                !editor
+                  ?.can()
+                  .chain()
+                  .focus()
+                  .toggleHeading({ level: 3 })
+                  .run() || editor?.isActive("codeBlock")
+              }
+              isActive={editor?.isActive("heading", { level: 3 })}
+              tooltip="Heading 3"
+              aria-label="Heading 3"
+            >
+              <Heading3Icon className="size-5" />
+            </ToolbarButton>
             <Separator orientation="vertical" className="h-6" />
-            <Button
-              variant={editor?.isActive("bold") ? "secondary" : "ghost"}
-              size="icon"
-              onClick={toggleBold}
-              type="button"
+            <ToolbarButton
+              onClick={() => editor?.chain().focus().toggleBold().run()}
+              disabled={
+                !editor?.can().chain().focus().toggleBold().run() ||
+                editor?.isActive("codeBlock")
+              }
+              isActive={editor?.isActive("bold")}
+              tooltip="Bold"
+              aria-label="Bold"
             >
-              <BoldIcon className="h-5 w-5" />
-              <span className="sr-only">Bold</span>
-            </Button>
-            <Button
-              variant={editor?.isActive("italic") ? "secondary" : "ghost"}
-              size="icon"
-              onClick={toggleItalic}
-              type="button"
+              <Bold className="size-5" />
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor?.chain().focus().toggleItalic().run()}
+              disabled={
+                !editor?.can().chain().focus().toggleItalic().run() ||
+                editor.isActive("codeBlock")
+              }
+              isActive={editor?.isActive("italic")}
+              tooltip="Italic"
+              aria-label="Italic"
             >
-              <ItalicIcon className="h-5 w-5" />
-              <span className="sr-only">Italic</span>
-            </Button>
+              <Italic className="size-5" />
+            </ToolbarButton>
+            <Separator orientation="vertical" className="mx-2 h-7" />
+            <ToolbarButton
+              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
+              disabled={
+                !editor?.can().chain().focus().toggleOrderedList().run() ||
+                editor.isActive("codeBlock")
+              }
+              isActive={editor?.isActive("orderedList")}
+              tooltip="Ordered List"
+              aria-label="Ordered List"
+            >
+              <ListOrdered className="size-5" />
+            </ToolbarButton>
+            <ToolbarButton
+              onClick={() => editor?.chain().focus().toggleBulletList().run()}
+              disabled={
+                !editor?.can().chain().focus().toggleBulletList().run() ||
+                editor.isActive("codeBlock")
+              }
+              isActive={editor?.isActive("bulletList")}
+              tooltip="Bullet List"
+              aria-label="Bullet List"
+            >
+              <List className="size-5" />
+            </ToolbarButton>
           </div>
           <EditorContent editor={editor} className="w-full" />
         </div>
