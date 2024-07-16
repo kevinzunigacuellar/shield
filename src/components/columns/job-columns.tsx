@@ -11,21 +11,22 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { buttonVariants } from "@/components/ui/button";
 import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { DataTableColumnHeader } from "@/components/column-header";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import { deleteJob } from "@/actions/job-actions";
 import Link from "next/link";
-import { tc } from "@/lib/utils";
 
 type Job = {
   id: string;
@@ -74,17 +75,17 @@ export const columns: ColumnDef<Job>[] = [
   {
     accessorKey: "_count.applications",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="No. of applications" />;
+      return (
+        <DataTableColumnHeader column={column} title="No. of applications" />
+      );
     },
   },
   {
     id: "actions",
     cell: ({ row }) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { toast } = useToast();
       const job = row.original;
       return (
-        <Dialog>
+        <AlertDialog>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-8 w-8 p-0">
@@ -97,54 +98,50 @@ export const columns: ColumnDef<Job>[] = [
               <DropdownMenuItem asChild>
                 <Link href={`/jobs/edit/${job.id}`}>Edit</Link>
               </DropdownMenuItem>
-              <DialogTrigger asChild>
+              <AlertDialogTrigger asChild>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
-              </DialogTrigger>
+              </AlertDialogTrigger>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link href={`/post/${job.id}`}>Live preview</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          <DialogContent className="sm:max-w-md">
-            <DialogHeader>
-              <DialogTitle>Delete job</DialogTitle>
-              <DialogDescription>
+          <AlertDialogContent className="sm:max-w-md">
+            <AlertDialogHeader>
+              <AlertDialogTitle>Delete job</AlertDialogTitle>
+              <AlertDialogDescription>
                 Are you sure you want to permanently delete this job? This
                 action cannot be undone.
-              </DialogDescription>
-            </DialogHeader>
-            <DialogFooter>
-              <DialogClose asChild>
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel asChild>
                 <Button type="button" variant="outline">
                   Cancel
                 </Button>
-              </DialogClose>
-              <DialogClose asChild>
-                <Button
-                  variant="destructive"
-                  onClick={async () => {
-                    const { error } = await tc(deleteJob(job.id, job.userId));
-                    if (error) {
-                      toast({
-                        title: "Something went wrong",
-                        description: error.message,
-                        variant: "destructive",
-                      });
-                    } else {
-                      toast({
-                        title: "Job deleted",
-                        description: "The job has been successfully deleted.",
-                      });
-                    }
-                  }}
-                >
-                  Delete
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              </AlertDialogCancel>
+              <AlertDialogAction
+                className={buttonVariants({ variant: "destructive" })}
+                onClick={async () => {
+                  toast.promise(
+                    deleteJob({
+                      id: job.id,
+                      ownerId: job.userId,
+                    }),
+                    {
+                      loading: "Deleting job...",
+                      success: () => `${job.title} job has been deleted.`,
+                      error: "Failed to delete job",
+                    },
+                  );
+                }}
+              >
+                Delete
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
       );
     },
   },

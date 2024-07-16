@@ -4,7 +4,13 @@ import { redirect } from "next/navigation";
 import { DataTable } from "@/components/data-table";
 import { columns } from "@/components/columns/job-columns";
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -43,10 +49,8 @@ export default async function Dashboard() {
       <Card className={cn("flex flex-col", { "h-[450px]": !jobs.length })}>
         <CardHeader className="sm:flex-row sm:justify-between gap-2">
           <div className="flex flex-col gap-1.5">
-          <CardTitle>Jobs</CardTitle>
-          <CardDescription>
-            Jobs created by the user
-          </CardDescription>
+            <CardTitle>Jobs</CardTitle>
+            <CardDescription>Jobs created by the user</CardDescription>
           </div>
           {jobs.length ? (
             <Link
@@ -56,7 +60,7 @@ export default async function Dashboard() {
               Create a new job
             </Link>
           ) : null}
-          </CardHeader>
+        </CardHeader>
         <CardContent className={cn({ "flex flex-1": !jobs.length })}>
           {jobs.length ? (
             <DataTable columns={columns} data={jobs} />

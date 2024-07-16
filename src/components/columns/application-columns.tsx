@@ -11,10 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/column-header";
-import { useToast } from "@/components/ui/use-toast";
+import { toast } from "sonner";
 import Link from "next/link";
 import { rejectApplication } from "@/actions/application-actions";
-import { tc } from "@/lib/utils";
 
 type Applications = {
   id: string;
@@ -74,8 +73,6 @@ export const columns: ColumnDef<Applications>[] = [
   {
     id: "actions",
     cell: ({ row }) => {
-      // eslint-disable-next-line react-hooks/rules-of-hooks
-      const { toast } = useToast();
       const application = row.original;
       return (
         <DropdownMenu>
@@ -89,21 +86,14 @@ export const columns: ColumnDef<Applications>[] = [
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onSelect={async () => {
-                const { error } = await tc(
+                toast.promise(
                   rejectApplication(application.id, application.jobId),
+                  {
+                    loading: "Loading...",
+                    success: "The application was removed",
+                    error: "Something went wrong",
+                  },
                 );
-                if (error) {
-                  toast({
-                    title: "Something went wrong",
-                    description: error.message,
-                    variant: "destructive",
-                  });
-                } else {
-                  toast({
-                    title: "Application rejected",
-                    description: "The application has been rejected",
-                  });
-                }
               }}
             >
               Reject

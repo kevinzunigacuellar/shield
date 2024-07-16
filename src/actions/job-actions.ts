@@ -77,7 +77,13 @@ export async function updateJob(data: unknown) {
   redirect(`/jobs`);
 }
 
-export async function deleteJob(jobId: string, ownerId: string) {
+export async function deleteJob({
+  id,
+  ownerId,
+}: {
+  id: string;
+  ownerId: string;
+}) {
   const { userId } = auth();
   if (!userId) {
     redirect(`/unauthorized`);
@@ -90,7 +96,7 @@ export async function deleteJob(jobId: string, ownerId: string) {
   try {
     await prisma.job.delete({
       where: {
-        id: jobId,
+        id,
       },
     });
   } catch (e) {
