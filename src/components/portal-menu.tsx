@@ -9,10 +9,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import ActiveLink from "@/components/active-link";
 
 const navigation = [
-  // { name: "Dashboard", href: "/dashboard" },
-  { name: "Jobs", href: "/jobs" },
+  { id: 1, name: "Jobs", href: "/jobs" },
+  { id: 2, name: "Applications", href: "/applications" },
 ];
 
 export default function HeaderMenu() {
@@ -28,13 +29,7 @@ export default function HeaderMenu() {
           <span className="sr-only">Shield</span>
         </Link>
         {navigation.map((item) => (
-          <Link
-            key={item.name}
-            href={item.href}
-            className="text-muted-foreground hover:text-foreground"
-          >
-            {item.name}
-          </Link>
+          <ActiveLink key={item.id} href={item.href} name={item.name} />
         ))}
       </nav>
       <Sheet>

@@ -32,7 +32,7 @@ export default async function Dashboard() {
       userId,
     },
     orderBy: {
-      xata_createdat: "desc",
+      xata_createdat: "asc",
     },
     include: {
       _count: {

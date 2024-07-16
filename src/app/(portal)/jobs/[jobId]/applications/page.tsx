@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { Metadata } from "next";
+import type { Metadata, ResolvingMetadata } from "next";
 
 interface JobApplicationsPageProps {
   params: {
@@ -21,10 +21,25 @@ interface JobApplicationsPageProps {
   };
 }
 
-export const metadata: Metadata = {
-  title: "Applications",
-  description: "Applications for the job",
-};
+export async function generateMetadata(
+  { params }: JobApplicationsPageProps,
+  parent: ResolvingMetadata,
+): Promise<Metadata> {
+  // read route params
+  const id = params.jobId;
+
+  // fetch data
+  const job = await prisma.job.findUnique({
+    where: { id },
+    select: { title: true },
+  });
+
+  return {
+    title: `Applications for ${job?.title} | Shield`,
+    description: `Applications for the job: ${job?.title}`,
+  };
+}
+
 export default async function JobApplicationsPage({
   params,
 }: JobApplicationsPageProps) {

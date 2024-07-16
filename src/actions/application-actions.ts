@@ -101,5 +101,5 @@ export async function rejectApplication(applicationId: string, jobId: string) {
   } catch (e) {
     throw new Error("Something went wrong, please try again later.");
   }
-  revalidatePath("/jobs/[jobId]/applications/page");
+  revalidatePath("/jobs/[jobId]/applications");
 }
