@@ -1,8 +1,8 @@
 import { ShieldCheck } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Application Submitted",
+  title: "Application Submitted | Shield",
   description:
     "Your application has been submitted successfully. Thanks for applying!",
 };

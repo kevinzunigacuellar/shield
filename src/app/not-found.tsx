@@ -1,9 +1,9 @@
 import Link from "next/link";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Page Not Found",
+  title: "Page Not Found | Shield",
   description: "The page you requested could not be found",
 };
 

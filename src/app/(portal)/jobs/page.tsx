@@ -7,11 +7,11 @@ import Link from "next/link";
 import { Card, CardContent } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Dashboard",
-  description: "Dashboard for the shield job portal",
+  title: "Jobs | Shield",
+  description: "Dashboard for managing jobs",
 };
 
 export default async function Dashboard() {

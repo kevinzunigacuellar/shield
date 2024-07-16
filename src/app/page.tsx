@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { Shield } from "lucide-react";
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 import { SignInButton, SignedIn, SignedOut } from "@clerk/nextjs";
 

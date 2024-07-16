@@ -1,4 +1,10 @@
 import { SignUp } from "@clerk/nextjs";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign up | Shield",
+  description: "Sign up for a Shield account",
+};
 
 export default function Page() {
   return (

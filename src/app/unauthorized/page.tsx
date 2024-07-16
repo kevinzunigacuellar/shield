@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { Lock } from "lucide-react";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Unauthorized Access | Shield",
+  description: "You do not have permission to view the requested content",
+};
 
 export default function UnauthorizedPage() {
   return (
