@@ -56,7 +56,7 @@ export default async function JobApplicationsPage({
           {applications.length ? (
             <DataTable columns={columns} data={applications} />
           ) : (
-            <div className="flex flex-col gap-1 items-center justify-center w-full min-h-fit rounded-lg border border-dashed shadow-sm">
+            <div className="flex flex-col gap-1 items-center justify-center w-full min-h-fit rounded-lg border border-dashed shadow-sm p-4 text-center">
               <h3 className="text-2xl font-bold tracking-tight">
                 No applications found
               </h3>

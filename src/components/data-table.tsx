@@ -105,8 +105,8 @@ function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex flex-col sm:flex-row gap-3 items-center justify-between py-4">
-      <div className="w-full sm:w-auto flex items-center gap-2 flex-1 text-sm text-muted-foreground">
+    <div className="flex flex-col sm:flex-row gap-3 items-center justify-between px-2 py-4">
+      <div className="w-full sm:w-auto flex items-center sm:justify-normal justify-between gap-2 flex-1 text-sm text-muted-foreground">
         <p className="text-sm font-medium">Rows per page</p>
         <Select
           value={`${table.getState().pagination.pageSize}`}
@@ -126,7 +126,7 @@ function DataTablePagination<TData>({
           </SelectContent>
         </Select>
       </div>
-      <div className="w-full sm:w-auto flex items-center space-x-6 lg:space-x-8">
+      <div className="w-full sm:w-auto flex items-center justify-between sm:justify-normal space-x-6 lg:space-x-8">
         <div className="flex w-auto sm:w-[100px] items-center justify-center text-sm font-medium text-muted-foreground">
           Page {table.getState().pagination.pageIndex + 1} of{" "}
           {table.getPageCount()}

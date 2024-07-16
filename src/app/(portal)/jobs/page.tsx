@@ -61,7 +61,7 @@ export default async function Dashboard() {
           {jobs.length ? (
             <DataTable columns={columns} data={jobs} />
           ) : (
-            <div className="flex flex-col gap-1 items-center justify-center w-full min-h-fit rounded-lg border border-dashed shadow-sm">
+            <div className="flex flex-col gap-1 items-center justify-center w-full min-h-fit rounded-lg border border-dashed shadow-sm p-4 text-center">
               <h3 className="text-2xl font-bold tracking-tight">
                 You have no jobs
               </h3>

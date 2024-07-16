@@ -2,7 +2,13 @@ import Link from "next/link";
 import { Menu, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { UserButton, ClerkLoading, ClerkLoaded } from "@clerk/nextjs";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 const navigation = [
   // { name: "Dashboard", href: "/dashboard" },
@@ -39,13 +45,17 @@ export default function HeaderMenu() {
           </Button>
         </SheetTrigger>
         <SheetContent side="left">
+          <SheetTitle className="sr-only">Menu</SheetTitle>
+          <SheetDescription className="sr-only">
+            Navigation links
+          </SheetDescription>
           <nav className="grid gap-6 text-lg font-medium">
             <Link
               href="/"
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Shield className="h-6 w-6 fill-primary stroke-none" />
-              <span className="sr-only">Acme Inc</span>
+              <span className="sr-only">Shield</span>
             </Link>
             {navigation.map((item) => (
               <Link

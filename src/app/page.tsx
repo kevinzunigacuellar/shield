@@ -39,7 +39,7 @@ export default function LandingPage() {
           </SignedIn>
         </div>
       </header>
-      <main className="flex-1 flex items-center justify-center px-4">
+      <main className="flex-1 flex items-center justify-center px-4 sm:px-6">
         <div className="space-y-4 text-center">
           <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl">
             Shield
