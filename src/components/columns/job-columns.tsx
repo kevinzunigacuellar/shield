@@ -40,7 +40,9 @@ type Job = {
 export const columns: ColumnDef<Job>[] = [
   {
     accessorKey: "title",
-    header: "Title",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Title" />;
+    },
     cell: ({ row }) => {
       const job = row.original;
       return (
@@ -71,7 +73,9 @@ export const columns: ColumnDef<Job>[] = [
   },
   {
     accessorKey: "_count.applications",
-    header: "No. of applications",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="No. of applications" />;
+    },
   },
   {
     id: "actions",

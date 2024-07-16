@@ -36,7 +36,7 @@ export default function JobForm({
     editorProps: {
       attributes: {
         class:
-          "w-full max-w-none focus:outline-none bg-background px-4 py-3 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg prose-sm mx-0",
+          "w-full max-w-none focus:outline-none bg-background px-3 py-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg prose-sm mx-0",
         id: "job-description",
       },
     },

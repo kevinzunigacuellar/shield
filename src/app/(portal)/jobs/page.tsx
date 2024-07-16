@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import { DataTable } from "@/components/data-table";
 import { columns } from "@/components/columns/job-columns";
 import Link from "next/link";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
@@ -41,12 +41,12 @@ export default async function Dashboard() {
     <main>
       <h1 className="sr-only">Dashboard</h1>
       <Card className={cn("flex flex-col", { "h-[450px]": !jobs.length })}>
-        <div className="p-6 px-7 flex flex-col gap-3 sm:flex-row sm:justify-between items-center">
-          <div className="flex flex-col gap-1.5 w-full sm:w-auto">
-            <h3 className="font-semibold leading-none tracking-tight">Jobs</h3>
-            <p className="text-sm text-muted-foreground">
-              List of all jobs created by the user
-            </p>
+        <CardHeader className="sm:flex-row sm:justify-between gap-2">
+          <div className="flex flex-col gap-1.5">
+          <CardTitle>Jobs</CardTitle>
+          <CardDescription>
+            Jobs created by the user
+          </CardDescription>
           </div>
           {jobs.length ? (
             <Link
@@ -56,7 +56,7 @@ export default async function Dashboard() {
               Create a new job
             </Link>
           ) : null}
-        </div>
+          </CardHeader>
         <CardContent className={cn({ "flex flex-1": !jobs.length })}>
           {jobs.length ? (
             <DataTable columns={columns} data={jobs} />

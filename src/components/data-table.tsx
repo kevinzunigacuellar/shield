@@ -57,7 +57,7 @@ export function DataTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <>
       <Table>
         <TableHeader>
           {table.getHeaderGroups().map((headerGroup) => (
@@ -93,7 +93,7 @@ export function DataTable<TData, TValue>({
         </TableBody>
       </Table>
       <DataTablePagination table={table} />
-    </div>
+    </>
   );
 }
 

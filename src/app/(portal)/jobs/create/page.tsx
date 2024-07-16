@@ -7,6 +7,12 @@ import {
 } from "@/components/ui/card";
 import JobCreateForm from "@/components/job-form";
 import { createJob } from "@/actions/job-actions";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Create a Job",
+  description: "Create a new job posting",
+};
 
 export default function JobCreationPage() {
   return (
