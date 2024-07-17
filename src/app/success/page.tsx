@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 export default function SuccessPage() {
   return (
-    <div className="flex min-h-[100dvh] flex-col items-center justify-center bg-muted/40 px-4 py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-1 flex-col items-center justify-center bg-background px-4 py-12 sm:px-6 lg:px-8">
       <Confetti />
       <div className="mx-auto max-w-md text-center">
         <div className="mx-auto h-12 w-12 text-green-500">
