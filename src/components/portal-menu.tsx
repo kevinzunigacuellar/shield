@@ -18,14 +18,13 @@ const navigation = [
 
 export default function HeaderMenu() {
   return (
-    <header className="sticky top-0 flex h-16 items-center gap-4 justify-between border-b bg-background px-4 md:px-6">
+    <header className="flex min-h-16 items-center gap-4 justify-between border-b bg-background px-4 py md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
           href="/"
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <Shield className="h-6 w-6 fill-black" />
-
           <span className="sr-only">Shield</span>
         </Link>
         {navigation.map((item) => (
