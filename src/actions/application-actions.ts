@@ -16,35 +16,25 @@ const applicationFormSchema = zfd.formData({
   jobId: zfd.text(),
 });
 
-export async function createApplication(_: any, formData: FormData) {
+export async function createApplication(formData: unknown) {
   const parsed = applicationFormSchema.safeParse(formData);
 
   if (!parsed.success) {
-    return {
-      errors: parsed.error.flatten().fieldErrors,
-    };
+    throw new Error("Invalid form data");
   }
 
   const { name, email, resume, jobId } = parsed.data;
 
   // limit file size to 500kb
   if (resume.size > 1024 * 500) {
-    return {
-      errors: {
-        resume: "File size must be less than 500kb",
-      },
-    };
+    throw new Error("File size must be less than 500kb");
   }
 
   const [fileUpload] = await utapi.uploadFiles([resume]);
   const { data, error: fileUploadError } = fileUpload;
 
   if (fileUploadError || !data) {
-    return {
-      errors: {
-        resume: "Failed to upload resume, try again later",
-      },
-    };
+    throw new Error("Failed to upload resume");
   }
 
   const newApplication = await prisma.application.create({

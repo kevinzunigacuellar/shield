@@ -1,18 +1,20 @@
 import prisma from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import sanitizeHtml from "sanitize-html";
-import { ApplicationForm } from "@/components/application-form";
-import type { Metadata, ResolvingMetadata } from "next";
-
+import type { Metadata } from "next";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import ApplicationForm from "@/components/application-form";
 type Props = {
   params: { id: string };
 };
 
-export async function generateMetadata(
-  { params }: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  // fetch data
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const job = await prisma.job.findUnique({
     where: {
       id: params.id,
@@ -54,7 +56,17 @@ export default async function JobPage({ params }: { params: { id: string } }) {
         dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.description) }}
         className="prose max-w-none w-full prose-h2:font-semibold prose-h2:text-xl"
       />
-      <ApplicationForm jobId={job.id} />
+      <Card className="w-full mt-12">
+        <CardHeader>
+          <CardTitle className="text-xl font-bold">Apply Now</CardTitle>
+          <CardDescription>
+            Fill out the form below to apply for this job.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <ApplicationForm jobId={job.id} />
+        </CardContent>
+      </Card>
     </main>
   );
 }
