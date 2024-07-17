@@ -2,6 +2,8 @@ import { Confetti } from "@/components/ui/confetti";
 import { ShieldCheck } from "lucide-react";
 import type { Metadata } from "next";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Application Submitted | Shield",
   description:

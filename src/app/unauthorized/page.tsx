@@ -3,6 +3,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { Lock } from "lucide-react";
 import type { Metadata } from "next";
 
+export const dynamic = "force-static";
+
 export const metadata: Metadata = {
   title: "Unauthorized Access | Shield",
   description: "You do not have permission to view the requested content",
