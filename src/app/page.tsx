@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 export default function LandingPage() {
   return (
-    <div className="flex flex-col min-h-dvh bg-muted/40">
+    <div className="flex flex-col flex-1">
       <header className="flex items-center justify-between px-4 py-3 lg:px-6 border-b bg-background h-16">
         <Link href="/" className="flex items-center" prefetch={false}>
           <Shield className="h-6 w-6 fill-black" />
@@ -45,8 +45,7 @@ export default function LandingPage() {
             Shield
           </h1>
           <p className="max-w-2xl text-muted-foreground md:text-lg">
-            Job platform powered by AI to help you find the best candidates.
-            Post your job and let us do the rest
+            Discover top talent effortlessly with our AI-driven job platform.
           </p>
           <Link
             href="/sign-up"
