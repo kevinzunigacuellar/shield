@@ -80,14 +80,7 @@ export default function JobForm({
               onClick={() =>
                 editor?.chain().focus().toggleHeading({ level: 2 }).run()
               }
-              disabled={
-                !editor
-                  ?.can()
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: 2 })
-                  .run() || editor?.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("heading", { level: 2 })}
               tooltip="Heading 2"
               aria-label="Heading 2"
@@ -98,14 +91,7 @@ export default function JobForm({
               onClick={() =>
                 editor?.chain().focus().toggleHeading({ level: 3 }).run()
               }
-              disabled={
-                !editor
-                  ?.can()
-                  .chain()
-                  .focus()
-                  .toggleHeading({ level: 3 })
-                  .run() || editor?.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("heading", { level: 3 })}
               tooltip="Heading 3"
               aria-label="Heading 3"
@@ -115,10 +101,7 @@ export default function JobForm({
             <Separator orientation="vertical" className="h-6" />
             <ToolbarButton
               onClick={() => editor?.chain().focus().toggleBold().run()}
-              disabled={
-                !editor?.can().chain().focus().toggleBold().run() ||
-                editor?.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("bold")}
               tooltip="Bold"
               aria-label="Bold"
@@ -127,10 +110,7 @@ export default function JobForm({
             </ToolbarButton>
             <ToolbarButton
               onClick={() => editor?.chain().focus().toggleItalic().run()}
-              disabled={
-                !editor?.can().chain().focus().toggleItalic().run() ||
-                editor.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("italic")}
               tooltip="Italic"
               aria-label="Italic"
@@ -140,10 +120,7 @@ export default function JobForm({
             <Separator orientation="vertical" className="mx-2 h-7" />
             <ToolbarButton
               onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-              disabled={
-                !editor?.can().chain().focus().toggleOrderedList().run() ||
-                editor.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("orderedList")}
               tooltip="Ordered List"
               aria-label="Ordered List"
@@ -152,10 +129,7 @@ export default function JobForm({
             </ToolbarButton>
             <ToolbarButton
               onClick={() => editor?.chain().focus().toggleBulletList().run()}
-              disabled={
-                !editor?.can().chain().focus().toggleBulletList().run() ||
-                editor.isActive("codeBlock")
-              }
+              disabled={false}
               isActive={editor?.isActive("bulletList")}
               tooltip="Bullet List"
               aria-label="Bullet List"
