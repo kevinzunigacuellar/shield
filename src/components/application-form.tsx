@@ -51,8 +51,8 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
         }),
         {
           loading: "Submitting application...",
-          error: "Failed to submit application",
-        }
+          error: (e) => `Error: ${e.message}`,
+        },
       );
     },
     validatorAdapter: zodValidator(),

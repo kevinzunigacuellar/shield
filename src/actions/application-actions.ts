@@ -22,15 +22,11 @@ export async function createApplication(data: ApplicationData) {
   const parsed = applicationFormSchema.safeParse(data);
 
   if (!parsed.success) {
-    throw new Error("Invalid form data");
+    const errors = parsed.error.errors.map((e) => e.message).join(", ");
+    throw new Error(errors);
   }
 
   const { name, email, resume, jobId } = parsed.data;
-
-  // limit file size to 1mb
-  if (resume.size > 1024 * 1000) {
-    throw new Error("File size must be less than 500kb");
-  }
 
   const newApplication = await prisma.application.create({
     data: {
