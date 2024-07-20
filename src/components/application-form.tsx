@@ -52,7 +52,7 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
         {
           loading: "Submitting application...",
           error: "Failed to submit application",
-        },
+        }
       );
     },
     validatorAdapter: zodValidator(),
@@ -88,6 +88,7 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
           url: resume.url,
           size: resume.size,
         });
+        form.validateField("resume", "change");
       }
     },
     onUploadError: (error) => {
@@ -155,8 +156,8 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
         validators={{
           onChange: z.object({
             name: z.string(),
-            url: z.string().url(),
-            size: z.number().max(1_000_000),
+            url: z.string().url("A PDF file is required"),
+            size: z.number().max(1_000_000, "File size must be less than 1mb"),
           }),
         }}
       >
@@ -166,7 +167,7 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
             <div
               {...getRootProps()}
               className={cn([
-                "border border-dashed rounded-md p-2 flex items-center justify-center text-sm min-h-20 gap-1 text-muted-foreground shadow-sm hover:text-primary hover:cursor-pointer focus:outline-none focus:text-primary focus:border-primary",
+                "border border-dashed rounded-md p-2 flex items-center justify-center text-sm min-h-24 gap-1 text-muted-foreground shadow-sm hover:text-primary hover:cursor-pointer focus:outline-none focus:text-primary focus:border-primary",
                 {
                   "border-primary text-primary bg-muted/30":
                     isDragAccept || isDragActive,
@@ -183,10 +184,15 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
                   isUploading={isUploading}
                 />
               ) : (
-                <>
-                  <span className="font-semibold">Upload file</span> or drag and
-                  drop
-                </>
+                <div className="flex flex-col gap-1">
+                  <p>
+                    <span className="font-semibold">Upload file</span> or drag
+                    and drop
+                  </p>
+                  <span className="text-xs text-center">
+                    PDF files only, up to 1mb
+                  </span>
+                </div>
               )}
             </div>
             <FieldInfo field={field} />
