@@ -30,6 +30,7 @@ export default async function JobsPage() {
   const jobs = await prisma.job.findMany({
     where: {
       ownerId: orgId ?? userId,
+      status: "OPEN",
     },
     orderBy: {
       xata_createdat: "asc",

@@ -88,7 +88,7 @@ export async function deleteJob({
   ownerId: string;
 }) {
   const { userId, orgId } = auth();
-  if (!userId) {
+  if (!userId ) {
     redirect(`/unauthorized`);
   }
 
@@ -99,10 +99,14 @@ export async function deleteJob({
   }
 
   try {
-    await prisma.job.delete({
+    await prisma.job.update({
       where: {
         id,
+        ownerId: currentUserId,
       },
+      data: {
+        status: "CLOSED",
+      }
     });
   } catch (e) {
     throw new Error("Something went wrong, please try again later.");

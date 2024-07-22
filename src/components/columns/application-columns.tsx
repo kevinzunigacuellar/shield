@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { ExternalLink, MoreHorizontal } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,6 +22,7 @@ type Applications = {
   resume: string;
   email: string;
   score: number | null;
+  status: "PENDING" | "REJECTED" | "HIRED";
   xata_createdat: Date;
   job: {
     id: string;
@@ -58,8 +60,22 @@ export const columns: ColumnDef<Applications>[] = [
           target="_blank"
           className="underline-offset-4 hover:underline flex items-center gap-1"
         >
-          <span>Open in new tab</span> <ExternalLink className="h-3 w-3" />
+          <span>Open resume</span> <ExternalLink className="h-3 w-3" />
         </Link>
+      );
+    },
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => {
+      const application = row.original;
+      return (
+        <Badge
+          variant={application.status === "PENDING" ? "outline" : "default"}
+        >
+          {application.status}
+        </Badge>
       );
     },
   },

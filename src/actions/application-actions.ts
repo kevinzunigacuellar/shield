@@ -74,9 +74,12 @@ export async function rejectApplication(applicationId: string, jobId: string) {
   }
 
   try {
-    await prisma.application.delete({
+    await prisma.application.update({
       where: {
         id: applicationId,
+      },
+      data: {
+        status: "REJECTED",
       },
     });
   } catch (e) {

@@ -36,6 +36,7 @@ export default async function ApplicationPage() {
       email: true,
       score: true,
       xata_createdat: true,
+      status: true,
       job: {
         select: {
           id: true,
@@ -46,7 +47,7 @@ export default async function ApplicationPage() {
     },
   });
   return (
-    <article className="max-w-7xl w-full mx-auto mt-10 px-4 sm:px-6">
+    <article className="max-w-7xl w-full mx-auto my-10 px-4 sm:px-6">
       <Card>
         <CardHeader className="sr-only">
           <CardTitle>Applications</CardTitle>

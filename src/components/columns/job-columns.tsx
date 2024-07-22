@@ -33,6 +33,7 @@ type Job = {
   id: string;
   title: string;
   xata_createdat: Date;
+  status: "OPEN" | "CLOSED";
   body: string;
   ownerId: string;
   _count: {

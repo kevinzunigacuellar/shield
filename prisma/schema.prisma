@@ -9,29 +9,42 @@ datasource db {
 }
 
 model Application {
-  id             String   @id @default(cuid())
+  id             String            @id @default(cuid())
   jobId          String
   resume         String
   name           String
   email          String
+  status         ApplicationStatus @default(PENDING)
   score          Int?
-  job            Job      @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   // automatically generated fields from xata
-  xata_id        String   @unique(map: "Application__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
-  xata_version   Int      @default(0)
-  xata_createdat DateTime @default(now()) @db.Timestamptz(6)
-  xata_updatedat DateTime @default(now()) @db.Timestamptz(6)
+  xata_id        String            @unique(map: "Application__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
+  xata_version   Int               @default(0)
+  xata_createdat DateTime          @default(now()) @db.Timestamptz(6)
+  xata_updatedat DateTime          @default(now()) @db.Timestamptz(6)
 }
 
 model Job {
   id             String        @id @default(cuid())
   title          String
-  body          String
-  ownerId         String
+  body           String
+  ownerId        String
   applications   Application[]
+  status         JobStatus     @default(OPEN)
   // automatically generated fields from xata
   xata_id        String        @unique(map: "Job__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))
   xata_version   Int           @default(0)
   xata_createdat DateTime      @default(now()) @db.Timestamptz(6)
   xata_updatedat DateTime      @default(now()) @db.Timestamptz(6)
+}
+
+enum ApplicationStatus {
+  PENDING
+  REJECTED
+  HIRED
+}
+
+enum JobStatus {
+  OPEN
+  CLOSED
 }
