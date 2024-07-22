@@ -8,73 +8,76 @@ import { revalidatePath } from "next/cache";
 
 const jobSchema = z.object({
   title: z.string().trim().min(3),
-  description: z.string().trim().min(3),
-  text: z.string().trim().min(3),
-  id: z.string().optional(),
+  body: z.string().trim().min(3),
 });
 
-export async function createJob(data: unknown) {
-  const validData = jobSchema.safeParse(data);
+const jobUpdateSchema = jobSchema.extend({
+  id: z.string(),
+  ownerId: z.string(),
+});
+
+type Job = z.infer<typeof jobSchema>;
+type JobUpdate = z.infer<typeof jobUpdateSchema>;
+
+export async function createJob(data: Job) {
+  const parsed = jobSchema.safeParse(data);
 
   // validate data
-  if (!validData.success) {
-    return {
-      errors: validData.error.flatten().fieldErrors,
-    };
+  if (!parsed.success) {
+    throw new Error("Could not create job.");
   }
 
-  const { userId } = auth();
+  const { userId, orgId } = auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
 
+  const { title, body } = parsed.data;
+
   await prisma.job.create({
     data: {
-      title: validData.data.title,
-      description: validData.data.description,
-      userId,
-      text: validData.data.text,
+      title,
+      body,
+      ownerId: orgId ?? userId,
     },
   });
 
   revalidatePath(`/jobs`);
-  redirect(`/jobs`);
 }
 
-export async function updateJob(data: unknown) {
-  const parsed = jobSchema.safeParse(data);
+export async function updateJob(data: JobUpdate) {
+  const parsed = jobUpdateSchema.safeParse(data);
   if (!parsed.success) {
-    return {
-      errors: parsed.error.flatten().fieldErrors,
-    };
+    throw new Error("Could not update job.");
   }
 
-  const { userId } = auth();
+  const { userId, orgId } = auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
 
-  const { id, title, description, text } = parsed.data;
+  const { id, title, body, ownerId } = parsed.data;
 
-  if (!id) {
-    return;
+  const currentUserId = orgId ?? userId;
+
+  if (currentUserId !== ownerId) {
+    throw new Error("You are not the owner of this job.");
   }
 
   await prisma.job.update({
     where: {
       id: id,
+      ownerId: orgId ?? userId,
     },
     data: {
-      title: title,
-      description: description,
-      text: text,
+      title,
+      body,
     },
   });
 
   revalidatePath(`/jobs`);
-  redirect(`/jobs`);
 }
 
 export async function deleteJob({
@@ -84,12 +87,14 @@ export async function deleteJob({
   id: string;
   ownerId: string;
 }) {
-  const { userId } = auth();
+  const { userId, orgId } = auth();
   if (!userId) {
     redirect(`/unauthorized`);
   }
 
-  if (userId !== ownerId) {
+  const currentUserId = orgId ?? userId;
+
+  if (currentUserId !== ownerId) {
     throw new Error("You don't have permission to delete this job.");
   }
 

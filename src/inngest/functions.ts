@@ -1,6 +1,8 @@
 import { inngest } from "./client";
 import { CohereClient } from "cohere-ai";
 import { Resend } from "resend";
+import { generateText } from "@tiptap/core";
+import StarterKit from "@tiptap/starter-kit";
 
 export const scoreApplicantResume = inngest.createFunction(
   { id: "score-resume" }, // Each function should have a unique ID
@@ -17,7 +19,7 @@ export const scoreApplicantResume = inngest.createFunction(
           job: {
             select: {
               title: true,
-              text: true,
+              body: true,
             },
           },
         },
@@ -55,8 +57,9 @@ export const scoreApplicantResume = inngest.createFunction(
       const cohere = new CohereClient({
         token: process.env.COHERE_API_KEY,
       });
+      const text = generateText(JSON.parse(appjobData.job.body), [StarterKit]);
       const response = await cohere.chat({
-        message: `Based on the job post provided: ${appjobData.job.title} ${appjobData.job.text} and the resume provided: ${pdfText}, generate a score from 0 to 100 indicating if the candidate is a fit for the job. Only output the score number`,
+        message: `Based on the job post provided: ${appjobData.job.title} ${text} and the resume provided: ${pdfText}, generate a score from 0 to 100 indicating if the candidate is a fit for the job. Only output the score number`,
       });
       return response.text;
     });

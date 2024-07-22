@@ -16,8 +16,8 @@ const applicationFormSchema = z.object({
   }),
   jobId: z.string(),
 });
-
 type ApplicationData = z.infer<typeof applicationFormSchema>;
+
 export async function createApplication(data: ApplicationData) {
   const parsed = applicationFormSchema.safeParse(data);
 
@@ -50,12 +50,11 @@ export async function createApplication(data: ApplicationData) {
   } catch (e) {
     console.error(e);
   }
-
   redirect("/success");
 }
 
 export async function rejectApplication(applicationId: string, jobId: string) {
-  const { userId } = auth();
+  const { userId, orgId } = auth();
   if (!userId) {
     redirect(`/unauthorized`);
   }
@@ -63,18 +62,15 @@ export async function rejectApplication(applicationId: string, jobId: string) {
   const job = await prisma.job.findUnique({
     where: {
       id: jobId,
+      ownerId: orgId ?? userId,
     },
     select: {
-      userId: true,
+      ownerId: true,
     },
   });
 
   if (!job) {
     throw new Error("Something went wrong, please try again later.");
-  }
-
-  if (userId !== job.userId) {
-    throw new Error("You don't have permission to delete this application.");
   }
 
   try {
@@ -86,5 +82,5 @@ export async function rejectApplication(applicationId: string, jobId: string) {
   } catch (e) {
     throw new Error("Something went wrong, please try again later.");
   }
-  revalidatePath("/jobs/[jobId]/applications");
+  revalidatePath("/applications");
 }

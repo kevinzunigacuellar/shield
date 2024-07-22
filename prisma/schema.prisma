@@ -26,9 +26,8 @@ model Application {
 model Job {
   id             String        @id @default(cuid())
   title          String
-  description    String
-  text           String
-  userId         String
+  body          String
+  ownerId         String
   applications   Application[]
   // automatically generated fields from xata
   xata_id        String        @unique(map: "Job__pgroll_new_xata_id_key") @default(dbgenerated("('rec_'::text || (xata_private.xid())::text)"))

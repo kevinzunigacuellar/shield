@@ -1,9 +1,23 @@
 "use client";
 
-import { Separator } from "@/components/ui/separator";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTrigger,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import { useForm } from "@tanstack/react-form";
+import { toast } from "sonner";
+import { FieldInfo } from "@/components/field-info";
+import { zodValidator } from "@tanstack/zod-form-adapter";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
+import { z } from "zod";
 import {
   Heading2Icon,
   Heading3Icon,
@@ -12,27 +26,47 @@ import {
   ListOrdered,
   List,
 } from "lucide-react";
+import { Separator } from "@/components/ui/separator";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
-import { SubmitButton } from "@/components/submit-button";
 import { ToolbarButton } from "@/components/toolbar-button";
-
-interface JobFormProps {
-  initialTitle?: string;
-  initialDescriptionHtml?: string;
-  jobId?: string;
-  action: any;
-}
+import { createJob, updateJob } from "@/actions/job-actions";
 
 export default function JobForm({
-  initialTitle = "",
-  initialDescriptionHtml = "",
-  action,
-  jobId,
-}: JobFormProps) {
-  const [jobTitle, setJobTitle] = useState(initialTitle);
+  job,
+  children,
+}: {
+  job?: { id: string; title: string; body: string; ownerId: string };
+  children: React.ReactNode;
+}) {
+  const form = useForm({
+    defaultValues: {
+      title: job?.title ?? "",
+      body: job?.body ?? "",
+    },
+    onSubmit: async ({ value }) => {
+      if (job) {
+        toast.promise(
+          updateJob({ ...value, id: job.id, ownerId: job.ownerId }),
+          {
+            loading: "Updating job...",
+            error: (e) => `Error: ${e.message}`,
+            success: "Job updated successfully",
+          },
+        );
+      } else {
+        toast.promise(createJob(value), {
+          loading: "Creating job...",
+          error: (e) => `Error: ${e.message}`,
+          success: "Job created successfully",
+        });
+      }
+    },
+    validatorAdapter: zodValidator(),
+  });
+
   const editor = useEditor({
-    content: initialDescriptionHtml,
+    content: job?.body ? JSON.parse(job.body) : null,
     extensions: [
       StarterKit.configure({
         heading: {
@@ -43,104 +77,180 @@ export default function JobForm({
     editorProps: {
       attributes: {
         class:
-          "w-full max-w-none focus:outline-none bg-background px-3 py-2 placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg prose-sm mx-0",
-        id: "job-description",
+          "w-full focus:outline-none bg-background max-w-none px-3 py-2 placeholder:text-primary disabled:cursor-not-allowed disabled:opacity-50 prose prose-h2:font-semibold prose-h2:text-xl prose-h3:font-semibold prose-h3:text-lg prose-sm mx-0",
+        id: "body",
+      },
+      handleDOMEvents: {
+        input: (editor) => {
+          form.setFieldValue("body", JSON.stringify(editor.state.toJSON().doc));
+          form.validateField("body", "change");
+        },
+        blur: (editor) => {
+          form.validateField("body", "change");
+        },
       },
     },
   });
 
-  const createJobWithArgs = action.bind(null, {
-    title: jobTitle,
-    description: editor?.getHTML(),
-    text: editor?.getText(),
-    id: jobId,
-  });
-
   return (
-    <form className="grid gap-6" action={createJobWithArgs}>
-      <div className="grid gap-2">
-        <Label htmlFor="job-title" className="text-sm font-medium">
-          Job Title
-        </Label>
-        <Input
-          id="job-title"
-          required
-          placeholder="Frontend Engineer"
-          onChange={(e) => setJobTitle(e.target.value)}
-          value={jobTitle}
-        />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="job-description" className="text-sm font-medium">
-          Job Description
-        </Label>
-        <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
-          <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().toggleHeading({ level: 2 }).run()
-              }
-              disabled={false}
-              isActive={editor?.isActive("heading", { level: 2 })}
-              tooltip="Heading 2"
-              aria-label="Heading 2"
+    <AlertDialog>
+      <AlertDialogTrigger asChild>{children}</AlertDialogTrigger>
+      <AlertDialogContent className="max-w-3xl">
+        <AlertDialogHeader>
+          <AlertDialogTitle>New Job</AlertDialogTitle>
+          <AlertDialogDescription>
+            Fill out the form below to create a new job posting
+          </AlertDialogDescription>
+        </AlertDialogHeader>
+        <form
+          className="flex flex-col gap-4"
+          onSubmit={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            form.handleSubmit();
+          }}
+        >
+          <form.Field
+            name="title"
+            validators={{
+              onChange: z.string().trim().min(3, "Title is required"),
+            }}
+          >
+            {(field) => (
+              <div className="flex flex-col gap-2">
+                <Label htmlFor={field.name}>Name</Label>
+                <Input
+                  id={field.name}
+                  name={field.name}
+                  value={field.state.value}
+                  placeholder="Frontend Engineer"
+                  onBlur={field.handleBlur}
+                  onChange={(e) => field.handleChange(e.target.value)}
+                />
+                <FieldInfo field={field} />
+              </div>
+            )}
+          </form.Field>
+          <form.Field
+            name="body"
+            validators={{
+              onChange: z.string().trim().min(90, "Must have a description"),
+            }}
+          >
+            {(field) => (
+              <div className="flex flex-col gap-2">
+                <Label
+                  htmlFor={field.name}
+                  onClick={() => {
+                    editor?.commands.focus();
+                  }}
+                >
+                  Description
+                </Label>
+                <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
+                  <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
+                    <ToolbarButton
+                      onClick={() =>
+                        editor
+                          ?.chain()
+                          .focus()
+                          .toggleHeading({ level: 2 })
+                          .run()
+                      }
+                      disabled={false}
+                      isActive={editor?.isActive("heading", { level: 2 })}
+                      tooltip="Heading 2"
+                      aria-label="Heading 2"
+                    >
+                      <Heading2Icon className="size-5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                      onClick={() =>
+                        editor
+                          ?.chain()
+                          .focus()
+                          .toggleHeading({ level: 3 })
+                          .run()
+                      }
+                      disabled={false}
+                      isActive={editor?.isActive("heading", { level: 3 })}
+                      tooltip="Heading 3"
+                      aria-label="Heading 3"
+                    >
+                      <Heading3Icon className="size-5" />
+                    </ToolbarButton>
+                    <Separator orientation="vertical" className="h-6" />
+                    <ToolbarButton
+                      onClick={() => editor?.chain().focus().toggleBold().run()}
+                      disabled={false}
+                      isActive={editor?.isActive("bold")}
+                      tooltip="Bold"
+                      aria-label="Bold"
+                    >
+                      <Bold className="size-5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                      onClick={() =>
+                        editor?.chain().focus().toggleItalic().run()
+                      }
+                      disabled={false}
+                      isActive={editor?.isActive("italic")}
+                      tooltip="Italic"
+                      aria-label="Italic"
+                    >
+                      <Italic className="size-5" />
+                    </ToolbarButton>
+                    <Separator orientation="vertical" className="mx-2 h-7" />
+                    <ToolbarButton
+                      onClick={() =>
+                        editor?.chain().focus().toggleOrderedList().run()
+                      }
+                      disabled={false}
+                      isActive={editor?.isActive("orderedList")}
+                      tooltip="Ordered List"
+                      aria-label="Ordered List"
+                    >
+                      <ListOrdered className="size-5" />
+                    </ToolbarButton>
+                    <ToolbarButton
+                      onClick={() =>
+                        editor?.chain().focus().toggleBulletList().run()
+                      }
+                      disabled={false}
+                      isActive={editor?.isActive("bulletList")}
+                      tooltip="Bullet List"
+                      aria-label="Bullet List"
+                    >
+                      <List className="size-5" />
+                    </ToolbarButton>
+                  </div>
+                  <EditorContent editor={editor} className="w-full" />
+                </div>
+                <FieldInfo field={field} />
+              </div>
+            )}
+          </form.Field>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => {
+                form.reset();
+                editor?.commands.clearContent();
+              }}
             >
-              <Heading2Icon className="size-5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() =>
-                editor?.chain().focus().toggleHeading({ level: 3 }).run()
-              }
-              disabled={false}
-              isActive={editor?.isActive("heading", { level: 3 })}
-              tooltip="Heading 3"
-              aria-label="Heading 3"
+              Cancel
+            </AlertDialogCancel>
+            <form.Subscribe
+              selector={(state) => [state.canSubmit, state.isSubmitting]}
             >
-              <Heading3Icon className="size-5" />
-            </ToolbarButton>
-            <Separator orientation="vertical" className="h-6" />
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleBold().run()}
-              disabled={false}
-              isActive={editor?.isActive("bold")}
-              tooltip="Bold"
-              aria-label="Bold"
-            >
-              <Bold className="size-5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleItalic().run()}
-              disabled={false}
-              isActive={editor?.isActive("italic")}
-              tooltip="Italic"
-              aria-label="Italic"
-            >
-              <Italic className="size-5" />
-            </ToolbarButton>
-            <Separator orientation="vertical" className="mx-2 h-7" />
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleOrderedList().run()}
-              disabled={false}
-              isActive={editor?.isActive("orderedList")}
-              tooltip="Ordered List"
-              aria-label="Ordered List"
-            >
-              <ListOrdered className="size-5" />
-            </ToolbarButton>
-            <ToolbarButton
-              onClick={() => editor?.chain().focus().toggleBulletList().run()}
-              disabled={false}
-              isActive={editor?.isActive("bulletList")}
-              tooltip="Bullet List"
-              aria-label="Bullet List"
-            >
-              <List className="size-5" />
-            </ToolbarButton>
-          </div>
-          <EditorContent editor={editor} className="w-full" />
-        </div>
-      </div>
-      <SubmitButton />
-    </form>
+              {([canSubmit]) => (
+                <AlertDialogAction type="submit" disabled={!canSubmit}>
+                  {job ? "Update" : "Create"}
+                </AlertDialogAction>
+              )}
+            </form.Subscribe>
+          </AlertDialogFooter>
+        </form>
+      </AlertDialogContent>
+    </AlertDialog>
   );
 }

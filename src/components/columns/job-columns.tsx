@@ -3,6 +3,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
+import UpdateJobForm from "@/components/job-form";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -32,7 +33,8 @@ type Job = {
   id: string;
   title: string;
   xata_createdat: Date;
-  userId: string;
+  body: string;
+  ownerId: string;
   _count: {
     applications: number;
   };
@@ -43,17 +45,6 @@ export const columns: ColumnDef<Job>[] = [
     accessorKey: "title",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Title" />;
-    },
-    cell: ({ row }) => {
-      const job = row.original;
-      return (
-        <Link
-          href={`/jobs/${job.id}/applications`}
-          className="underline-offset-4 hover:underline"
-        >
-          {job.title}
-        </Link>
-      );
     },
   },
   {
@@ -95,15 +86,17 @@ export const columns: ColumnDef<Job>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <DropdownMenuItem asChild>
-                <Link href={`/jobs/edit/${job.id}`}>Edit</Link>
-              </DropdownMenuItem>
+              <UpdateJobForm job={job}>
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                  Edit
+                </DropdownMenuItem>
+              </UpdateJobForm>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem>Delete</DropdownMenuItem>
               </AlertDialogTrigger>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/post/${job.id}`}>Live preview</Link>
+                <Link href={`/post/${job.id}`}>View application page</Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -127,7 +120,7 @@ export const columns: ColumnDef<Job>[] = [
                   toast.promise(
                     deleteJob({
                       id: job.id,
-                      ownerId: job.userId,
+                      ownerId: job.ownerId,
                     }),
                     {
                       loading: "Deleting job...",

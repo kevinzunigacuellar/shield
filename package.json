@@ -28,6 +28,8 @@
     "@tanstack/react-form": "^0.26.4",
     "@tanstack/react-table": "^8.19.2",
     "@tanstack/zod-form-adapter": "^0.26.4",
+    "@tiptap/core": "^2.5.4",
+    "@tiptap/html": "^2.5.4",
     "@tiptap/pm": "^2.4.0",
     "@tiptap/react": "^2.4.0",
     "@tiptap/starter-kit": "^2.4.0",

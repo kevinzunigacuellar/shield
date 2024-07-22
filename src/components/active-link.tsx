@@ -14,14 +14,18 @@ export default function ActiveLink({
   const pathname = usePathname();
   return (
     <Link
-      key={name}
       href={href}
-      className={cn(
-        "hover:text-foreground",
-        pathname === href ? "text-foreground" : "text-muted-foreground",
-      )}
+      className={cn([
+        "relative text-muted-foreground text-sm pt-2 pb-3 px-2 hover:text-foreground -mb-[1px]",
+        {
+          "text-primary": pathname === href,
+        },
+      ])}
     >
-      {name}
+      <span className="p-2">{name}</span>
+      {pathname === href && (
+        <span className="absolute bottom-0 left-0 border-t-[1.5px] border-black w-full"></span>
+      )}
     </Link>
   );
 }

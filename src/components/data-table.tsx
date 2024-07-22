@@ -105,7 +105,7 @@ function DataTablePagination<TData>({
   table,
 }: DataTablePaginationProps<TData>) {
   return (
-    <div className="flex flex-col sm:flex-row gap-3 items-center justify-between px-2 py-4">
+    <div className="flex flex-col sm:flex-row gap-3 items-center justify-between pl-2 pt-4">
       <div className="w-full sm:w-auto flex items-center sm:justify-normal justify-between gap-2 flex-1 text-sm text-muted-foreground">
         <p className="text-sm font-medium">Rows per page</p>
         <Select

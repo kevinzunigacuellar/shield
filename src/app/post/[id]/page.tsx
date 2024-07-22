@@ -10,6 +10,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import ApplicationForm from "@/components/application-form";
+import StarterKit from "@tiptap/starter-kit";
+import { generateHTML } from "@tiptap/html";
 type Props = {
   params: { id: string };
 };
@@ -41,7 +43,7 @@ export default async function JobPage({ params }: { params: { id: string } }) {
     select: {
       id: true,
       title: true,
-      description: true,
+      body: true,
     },
   });
 
@@ -53,7 +55,11 @@ export default async function JobPage({ params }: { params: { id: string } }) {
     <main className="flex flex-col flex-1 items-center py-16 px-6 w-full max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-8 tracking-tight">{job.title}</h1>
       <article
-        dangerouslySetInnerHTML={{ __html: sanitizeHtml(job.description) }}
+        dangerouslySetInnerHTML={{
+          __html: sanitizeHtml(
+            generateHTML(JSON.parse(job.body), [StarterKit]),
+          ),
+        }}
         className="prose max-w-none w-full prose-h2:font-semibold prose-h2:text-xl"
       />
       <Card className="w-full mt-12">

@@ -17,21 +17,34 @@ import { rejectApplication } from "@/actions/application-actions";
 
 type Applications = {
   id: string;
-  jobId: string;
+  name: string;
   resume: string;
   email: string;
   score: number | null;
   xata_createdat: Date;
+  job: {
+    id: string;
+    title: string;
+    ownerId: string;
+  };
 };
 
 export const columns: ColumnDef<Applications>[] = [
   {
-    accessorKey: "name",
-    header: "Name",
+    header: "Applicant",
+    cell: ({ row }) => {
+      const application = row.original;
+      return (
+        <div>
+          <p className="font-semibold">{application.name}</p>
+          <p className="text-sm text-muted-foreground">{application.email}</p>
+        </div>
+      );
+    },
   },
   {
-    accessorKey: "email",
-    header: "Email",
+    accessorKey: "job.title",
+    header: "Applied for",
   },
   {
     accessorKey: "resume",
@@ -52,12 +65,14 @@ export const columns: ColumnDef<Applications>[] = [
   },
   {
     accessorKey: "score",
-    header: "Score",
+    header: ({ column }) => {
+      return <DataTableColumnHeader column={column} title="Score" />;
+    },
   },
   {
     accessorKey: "xata_createdat",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Created at" />;
+      return <DataTableColumnHeader column={column} title="Received at" />;
     },
     cell: ({ row }) => {
       const job = row.original;
@@ -87,7 +102,7 @@ export const columns: ColumnDef<Applications>[] = [
             <DropdownMenuItem
               onSelect={async () => {
                 toast.promise(
-                  rejectApplication(application.id, application.jobId),
+                  rejectApplication(application.id, application.job.id),
                   {
                     loading: "Loading...",
                     success: "The application was removed",
