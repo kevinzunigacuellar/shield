@@ -18,7 +18,7 @@ export default function ActiveLink({
       className={cn([
         "relative text-muted-foreground text-sm pt-2 pb-3 px-2 hover:text-foreground -mb-[1px]",
         {
-          "text-primary": pathname === href,
+          "text-primary font-medium": pathname === href,
         },
       ])}
     >

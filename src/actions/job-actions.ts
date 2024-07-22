@@ -88,7 +88,7 @@ export async function deleteJob({
   ownerId: string;
 }) {
   const { userId, orgId } = auth();
-  if (!userId ) {
+  if (!userId) {
     redirect(`/unauthorized`);
   }
 
@@ -106,7 +106,7 @@ export async function deleteJob({
       },
       data: {
         status: "CLOSED",
-      }
+      },
     });
   } catch (e) {
     throw new Error("Something went wrong, please try again later.");

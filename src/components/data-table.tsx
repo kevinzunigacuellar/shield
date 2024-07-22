@@ -92,7 +92,7 @@ export function DataTable<TData, TValue>({
           ))}
         </TableBody>
       </Table>
-      { table.getRowCount() > table.getState().pagination.pageSize && (
+      {table.getRowCount() > table.getState().pagination.pageSize && (
         <DataTablePagination table={table} />
       )}
     </>
