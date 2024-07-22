@@ -8,6 +8,7 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
+    "inngest": "inngest-cli dev",
     "postinstall": "prisma generate"
   },
   "dependencies": {
@@ -22,6 +23,7 @@
     "@radix-ui/react-separator": "^1.1.0",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-switch": "^1.1.0",
+    "@radix-ui/react-tabs": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
     "@radix-ui/react-toggle": "^1.1.0",
     "@radix-ui/react-tooltip": "^1.1.2",
@@ -61,6 +63,7 @@
     "@types/sanitize-html": "^2.11.0",
     "eslint": "^8",
     "eslint-config-next": "14.2.4",
+    "inngest-cli": "^0.29.3",
     "netlify-plugin-inngest": "^1.0.1",
     "postcss": "^8",
     "prettier": "^3.3.2",
