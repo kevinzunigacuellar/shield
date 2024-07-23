@@ -2,7 +2,7 @@ import { z } from "zod";
 
 const JobStatus = z.enum(["OPEN", "CLOSED"]);
 
-const jobSchema = z.object({
+export const jobSchema = z.object({
   id: z.string(),
   title: z.string(),
   body: z.string(),

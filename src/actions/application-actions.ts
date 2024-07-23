@@ -1,25 +1,17 @@
 "use server";
 
 import prisma from "@/lib/prisma";
-import { z } from "zod";
 import { inngest } from "@/inngest";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { auth } from "@clerk/nextjs/server";
+import {
+  type createApplicationType,
+  createApplicationSchema,
+} from "@/types/application";
 
-const applicationFormSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  resume: z.object({
-    size: z.number().max(1_000_000, "File size must be less than 1mb"),
-    url: z.string().url(),
-  }),
-  jobId: z.string(),
-});
-type ApplicationData = z.infer<typeof applicationFormSchema>;
-
-export async function createApplication(data: ApplicationData) {
-  const parsed = applicationFormSchema.safeParse(data);
+export async function createApplication(data: createApplicationType) {
+  const parsed = createApplicationSchema.safeParse(data);
 
   if (!parsed.success) {
     const errors = parsed.error.errors.map((e) => e.message).join(", ");
