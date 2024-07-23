@@ -31,12 +31,13 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ToolbarButton } from "@/components/toolbar-button";
 import { createJob, updateJob } from "@/actions/job-actions";
+import { JobType } from "@/types/job";
 
 export default function JobForm({
   job,
   children,
 }: {
-  job?: { id: string; title: string; body: string; ownerId: string };
+  job?: JobType;
   children: React.ReactNode;
 }) {
   const form = useForm({
@@ -47,7 +48,12 @@ export default function JobForm({
     onSubmit: async ({ value }) => {
       if (job) {
         toast.promise(
-          updateJob({ ...value, id: job.id, ownerId: job.ownerId }),
+          updateJob({
+            ...value,
+            id: job.id,
+            ownerId: job.ownerId,
+            status: job.status,
+          }),
           {
             loading: "Updating job...",
             error: (e) => `Error: ${e.message}`,

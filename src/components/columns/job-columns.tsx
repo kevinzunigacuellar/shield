@@ -28,20 +28,9 @@ import { DataTableColumnHeader } from "@/components/column-header";
 import { toast } from "sonner";
 import { deleteJob } from "@/actions/job-actions";
 import Link from "next/link";
+import type { JobWithCount } from "@/types/job";
 
-type Job = {
-  id: string;
-  title: string;
-  xata_createdat: Date;
-  status: "OPEN" | "CLOSED";
-  body: string;
-  ownerId: string;
-  _count: {
-    applications: number;
-  };
-};
-
-export const columns: ColumnDef<Job>[] = [
+export const columns: ColumnDef<JobWithCount>[] = [
   {
     accessorKey: "title",
     header: ({ column }) => {

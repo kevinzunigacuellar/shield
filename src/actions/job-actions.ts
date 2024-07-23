@@ -1,26 +1,18 @@
 "use server";
 
 import { auth } from "@clerk/nextjs/server";
-import { z } from "zod";
 import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
+import {
+  createJobSchema,
+  type createJobType,
+  updateJobSchema,
+  updateJobType,
+} from "@/types/job";
 
-const jobSchema = z.object({
-  title: z.string().trim().min(3),
-  body: z.string().trim().min(3),
-});
-
-const jobUpdateSchema = jobSchema.extend({
-  id: z.string(),
-  ownerId: z.string(),
-});
-
-type Job = z.infer<typeof jobSchema>;
-type JobUpdate = z.infer<typeof jobUpdateSchema>;
-
-export async function createJob(data: Job) {
-  const parsed = jobSchema.safeParse(data);
+export async function createJob(data: createJobType) {
+  const parsed = createJobSchema.safeParse(data);
 
   // validate data
   if (!parsed.success) {
@@ -46,8 +38,8 @@ export async function createJob(data: Job) {
   revalidatePath(`/jobs`);
 }
 
-export async function updateJob(data: JobUpdate) {
-  const parsed = jobUpdateSchema.safeParse(data);
+export async function updateJob(data: updateJobType) {
+  const parsed = updateJobSchema.safeParse(data);
   if (!parsed.success) {
     throw new Error("Could not update job.");
   }
