@@ -2,12 +2,12 @@ import type { FieldApi } from "@tanstack/react-form";
 
 export function FieldInfo({ field }: { field: FieldApi<any, any, any, any> }) {
   return (
-    <>
+    <div className="min-h-6 -mt-1">
       {field.state.meta.isTouched && field.state.meta.errors.length ? (
-        <span className="-mt-1 text-destructive text-sm">
+        <span className="text-destructive text-sm">
           {field.state.meta.errors.join(",")}
         </span>
       ) : null}
-    </>
+    </div>
   );
 }

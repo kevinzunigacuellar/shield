@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { jobSchema } from "@/types/job";
+import { jobSchema } from "@/schema/job";
 const ApplicationStatus = z.enum(["PENDING", "REJECTED", "HIRED"]);
 
 const applicationSchema = z.object({
@@ -9,12 +9,10 @@ const applicationSchema = z.object({
   resume: z.string(),
   score: z.number().optional(),
   status: ApplicationStatus,
-  xata_id: z.string(),
-  xata_version: z.number(),
-  xata_createdat: z.date(),
-  xata_updatedat: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
   jobId: z.string(),
-  job: jobSchema.optional(),
+  job: jobSchema,
 });
 
 export const createApplicationSchema = applicationSchema
@@ -31,10 +29,14 @@ export const createApplicationSchema = applicationSchema
     }),
   });
 
-const rejectApplicationSchema = applicationSchema.pick({
-  id: true,
-  jobId: true,
-});
+export const rejectApplicationSchema = applicationSchema
+  .pick({
+    id: true,
+  })
+  .extend({
+    ownerId: z.string(),
+  });
 
+export type ApplicationType = z.infer<typeof applicationSchema>;
 export type createApplicationType = z.infer<typeof createApplicationSchema>;
 export type rejectApplicationType = z.infer<typeof rejectApplicationSchema>;

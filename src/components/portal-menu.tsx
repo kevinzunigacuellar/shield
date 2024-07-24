@@ -14,7 +14,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import ActiveLink from "./active-link";
 const navigation = [
   { id: 1, name: "Jobs", href: "/jobs" },
   { id: 2, name: "Applications", href: "/applications" },
@@ -22,7 +21,7 @@ const navigation = [
 
 export default function HeaderMenu() {
   return (
-    <header className="bg-background">
+    <header className="bg-background border-b">
       <div className="flex items-center gap-4 justify-between min-h-16 px-4 sm:px-6">
         <div className="hidden flex-col gap-4 text-lg font-medium md:flex md:flex-row md:items-center md:text-sm">
           <Link
@@ -83,11 +82,6 @@ export default function HeaderMenu() {
           <UserButton />
         </ClerkLoaded>
       </div>
-      <ul className="border-b pl-4 pr-3 flex">
-        {navigation.map((item) => (
-          <ActiveLink key={item.id} name={item.name} href={item.href} />
-        ))}
-      </ul>
     </header>
   );
 }

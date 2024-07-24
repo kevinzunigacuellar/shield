@@ -7,7 +7,7 @@ import { z } from "zod";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { createApplication } from "@/actions/application-actions";
+import { createApplication } from "@/actions/application";
 import { toast } from "sonner";
 import { useDropzone } from "@uploadthing/react";
 import { useUploadThing } from "@/lib/uploadthing/utils";

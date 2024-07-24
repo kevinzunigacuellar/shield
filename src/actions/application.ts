@@ -8,7 +8,9 @@ import { auth } from "@clerk/nextjs/server";
 import {
   type createApplicationType,
   createApplicationSchema,
-} from "@/types/application";
+  type rejectApplicationType,
+  rejectApplicationSchema,
+} from "@/schema/application";
 
 export async function createApplication(data: createApplicationType) {
   const parsed = createApplicationSchema.safeParse(data);
@@ -45,33 +47,36 @@ export async function createApplication(data: createApplicationType) {
   redirect("/success");
 }
 
-export async function rejectApplication(applicationId: string, jobId: string) {
+export async function rejectApplication(data: rejectApplicationType) {
+  const parsed = rejectApplicationSchema.safeParse(data);
+
+  if (!parsed.success) {
+    throw new Error("Something went wrong, please try again later.");
+  }
+
   const { userId, orgId } = auth();
+
   if (!userId) {
     redirect(`/unauthorized`);
   }
 
-  const job = await prisma.job.findUnique({
-    where: {
-      id: jobId,
-      ownerId: orgId ?? userId,
-    },
-    select: {
-      ownerId: true,
-    },
-  });
+  const currentUserId = orgId ?? userId;
 
-  if (!job) {
-    throw new Error("Something went wrong, please try again later.");
+  if (currentUserId !== data.ownerId) {
+    throw new Error("You don't have permission to reject this application.");
   }
 
   try {
     await prisma.application.update({
       where: {
-        id: applicationId,
+        id: data.id,
+        job: {
+          ownerId: currentUserId,
+        },
       },
       data: {
         status: "REJECTED",
+        updatedAt: new Date(),
       },
     });
   } catch (e) {

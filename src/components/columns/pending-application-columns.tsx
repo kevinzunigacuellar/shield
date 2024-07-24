@@ -14,24 +14,10 @@ import {
 import { DataTableColumnHeader } from "@/components/column-header";
 import { toast } from "sonner";
 import Link from "next/link";
-import { rejectApplication } from "@/actions/application-actions";
+import { rejectApplication } from "@/actions/application";
+import type { ApplicationType } from "@/schema/application";
 
-type Applications = {
-  id: string;
-  name: string;
-  resume: string;
-  email: string;
-  score: number | null;
-  status: "PENDING" | "REJECTED" | "HIRED";
-  xata_createdat: Date;
-  job: {
-    id: string;
-    title: string;
-    ownerId: string;
-  };
-};
-
-export const columns: ColumnDef<Applications>[] = [
+export const columns: ColumnDef<ApplicationType>[] = [
   {
     header: "Applicant",
     cell: ({ row }) => {
@@ -43,10 +29,6 @@ export const columns: ColumnDef<Applications>[] = [
         </div>
       );
     },
-  },
-  {
-    accessorKey: "job.title",
-    header: "Applied for",
   },
   {
     accessorKey: "resume",
@@ -66,27 +48,13 @@ export const columns: ColumnDef<Applications>[] = [
     },
   },
   {
-    accessorKey: "status",
-    header: "Status",
-    cell: ({ row }) => {
-      const application = row.original;
-      return (
-        <Badge
-          variant={application.status === "PENDING" ? "outline" : "default"}
-        >
-          {application.status}
-        </Badge>
-      );
-    },
-  },
-  {
     accessorKey: "score",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Score" />;
     },
   },
   {
-    accessorKey: "xata_createdat",
+    accessorKey: "createdAt",
     header: ({ column }) => {
       return <DataTableColumnHeader column={column} title="Received at" />;
     },
@@ -94,7 +62,7 @@ export const columns: ColumnDef<Applications>[] = [
       const job = row.original;
       return (
         <span>
-          {job.xata_createdat.toLocaleString("en-US", {
+          {job.createdAt.toLocaleString("en-US", {
             dateStyle: "medium",
           })}
         </span>
@@ -118,10 +86,13 @@ export const columns: ColumnDef<Applications>[] = [
             <DropdownMenuItem
               onSelect={async () => {
                 toast.promise(
-                  rejectApplication(application.id, application.job.id),
+                  rejectApplication({
+                    id: application.id,
+                    ownerId: application.job.ownerId,
+                  }),
                   {
                     loading: "Loading...",
-                    success: "The application was removed",
+                    success: "The application was archived",
                     error: "Something went wrong",
                   },
                 );

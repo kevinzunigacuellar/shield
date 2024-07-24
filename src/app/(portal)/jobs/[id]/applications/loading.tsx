@@ -15,7 +15,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function JobLoadingPage() {
+export default function JobsIdApplicationLoadingPage() {
   return (
     <>
       <header className="w-full border-b bg-background">
@@ -24,6 +24,7 @@ export default function JobLoadingPage() {
         </div>
       </header>
       <div className="max-w-7xl w-full mx-auto mt-10 px-4 sm:px-6">
+        <Skeleton className="h-3 w-20 mb-3" />
         <Skeleton className="h-6 w-36 mb-2" />
         <Card>
           <CardHeader>

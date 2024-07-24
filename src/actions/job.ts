@@ -7,9 +7,11 @@ import { revalidatePath } from "next/cache";
 import {
   createJobSchema,
   type createJobType,
+  type deleteJobType,
   updateJobSchema,
   updateJobType,
-} from "@/types/job";
+  deleteJobSchema,
+} from "@/schema/job";
 
 export async function createJob(data: createJobType) {
   const parsed = createJobSchema.safeParse(data);
@@ -66,13 +68,14 @@ export async function updateJob(data: updateJobType) {
     data: {
       title,
       body,
+      updatedAt: new Date(),
     },
   });
 
   revalidatePath(`/jobs`);
 }
 
-export async function deleteJob({
+export async function closeJob({
   id,
   ownerId,
 }: {
@@ -98,6 +101,38 @@ export async function deleteJob({
       },
       data: {
         status: "CLOSED",
+        updatedAt: new Date(),
+      },
+    });
+  } catch (e) {
+    throw new Error("Something went wrong, please try again later.");
+  }
+  revalidatePath(`/jobs`);
+}
+
+export async function deleteJob(data: deleteJobType) {
+  const parsed = deleteJobSchema.safeParse(data);
+
+  if (!parsed.success) {
+    throw new Error("Could not delete job.");
+  }
+
+  const { userId, orgId } = auth();
+  if (!userId) {
+    redirect(`/unauthorized`);
+  }
+
+  const currentUserId = orgId ?? userId;
+  const { ownerId, id } = parsed.data;
+
+  if (currentUserId !== ownerId) {
+    throw new Error("You don't have permission to delete this job.");
+  }
+
+  try {
+    await prisma.job.delete({
+      where: {
+        id,
       },
     });
   } catch (e) {

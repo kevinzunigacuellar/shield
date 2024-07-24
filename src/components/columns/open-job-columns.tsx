@@ -1,9 +1,8 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-import UpdateJobForm from "@/components/job-form";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,7 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { buttonVariants } from "@/components/ui/button";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -26,27 +24,57 @@ import {
 } from "@/components/ui/alert-dialog";
 import { DataTableColumnHeader } from "@/components/column-header";
 import { toast } from "sonner";
-import { deleteJob } from "@/actions/job-actions";
+import { closeJob } from "@/actions/job";
 import Link from "next/link";
-import type { JobWithCount } from "@/types/job";
+import type { JobWithCount } from "@/schema/job";
+import { Badge } from "@/components/ui/badge";
 
 export const columns: ColumnDef<JobWithCount>[] = [
   {
     accessorKey: "title",
-    header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Title" />;
+    header: "Title",
+    cell: ({ row }) => {
+      const job = row.original;
+      return (
+        <Link
+          href={`/jobs/${job.id}/applications`}
+          className="hover:underline hover:underline-offset-4"
+        >
+          {job.title}
+        </Link>
+      );
     },
   },
   {
-    accessorKey: "xata_createdat",
+    accessorKey: "status",
+    header: () => {
+      return <span className="hidden md:inline-block">Status</span>;
+    },
+    cell: ({ row }) => {
+      const { status } = row.original;
+      return (
+        <Badge variant="outline" className="hidden md:inline-block">
+          {status}
+        </Badge>
+      );
+    },
+  },
+  {
+    accessorKey: "createdAt",
     header: ({ column }) => {
-      return <DataTableColumnHeader column={column} title="Created at" />;
+      return (
+        <DataTableColumnHeader
+          column={column}
+          title="Created at"
+          className="hidden md:block"
+        />
+      );
     },
     cell: ({ row }) => {
       const job = row.original;
       return (
-        <span>
-          {job.xata_createdat.toLocaleString("en-US", {
+        <span className="hidden md:block">
+          {job.createdAt.toLocaleString("en-US", {
             dateStyle: "medium",
           })}
         </span>
@@ -56,9 +84,7 @@ export const columns: ColumnDef<JobWithCount>[] = [
   {
     accessorKey: "_count.applications",
     header: ({ column }) => {
-      return (
-        <DataTableColumnHeader column={column} title="No. of applications" />
-      );
+      return <DataTableColumnHeader column={column} title="New applications" />;
     },
   },
   {
@@ -76,26 +102,29 @@ export const columns: ColumnDef<JobWithCount>[] = [
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
-              <UpdateJobForm job={job}>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  Edit
-                </DropdownMenuItem>
-              </UpdateJobForm>
+              <DropdownMenuItem asChild>
+                <Link href={`/jobs/${job.id}/edit`}>Edit</Link>
+              </DropdownMenuItem>
               <AlertDialogTrigger asChild>
-                <DropdownMenuItem>Delete</DropdownMenuItem>
+                <DropdownMenuItem>Close job</DropdownMenuItem>
               </AlertDialogTrigger>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href={`/post/${job.id}`}>View application page</Link>
+                <Link href={`/post/${job.id}`}>View job post</Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <Link href={`/jobs/${job.id}/applications`}>
+                  View applications
+                </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
           <AlertDialogContent className="sm:max-w-md">
             <AlertDialogHeader>
-              <AlertDialogTitle>Delete job</AlertDialogTitle>
+              <AlertDialogTitle>Close job</AlertDialogTitle>
               <AlertDialogDescription>
-                Are you sure you want to permanently delete this job? This
-                action cannot be undone.
+                Are you sure you want to close this job? This action will hide
+                the job from the public and prevent new applications.
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
@@ -105,22 +134,21 @@ export const columns: ColumnDef<JobWithCount>[] = [
                 </Button>
               </AlertDialogCancel>
               <AlertDialogAction
-                className={buttonVariants({ variant: "destructive" })}
                 onClick={async () => {
                   toast.promise(
-                    deleteJob({
+                    closeJob({
                       id: job.id,
                       ownerId: job.ownerId,
                     }),
                     {
-                      loading: "Deleting job...",
+                      loading: "Closing job...",
                       success: () => `${job.title} job has been deleted.`,
                       error: "Failed to delete job",
                     },
                   );
                 }}
               >
-                Delete
+                Confirm
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>

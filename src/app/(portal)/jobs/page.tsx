@@ -1,76 +1,67 @@
-import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
-import { DataTable } from "@/components/data-table";
-import { columns } from "@/components/columns/job-columns";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
 import type { Metadata } from "next";
-import CreateJob from "@/components/job-form";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import OpenTable from "@/components/tables/open-job-table";
+import ArchiveTable from "@/components/tables/archive-job-table";
+import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
   title: "Jobs | Shield",
   description: "Manage your job postings and applications",
 };
 
-export default async function JobsPage() {
-  const { userId, orgId } = auth();
+export default async function JobsPage({
+  searchParams,
+}: {
+  params: { slug: string };
+  searchParams: { [key: string]: string | string[] | undefined };
+}) {
+  const { userId } = auth();
 
   if (!userId) {
     redirect("/sign-in");
   }
 
-  const jobs = await prisma.job.findMany({
-    where: {
-      ownerId: orgId ?? userId,
-      status: "OPEN",
-    },
-    orderBy: {
-      xata_createdat: "asc",
-    },
-    include: {
-      _count: {
-        select: {
-          applications: true,
-        },
-      },
-    },
-  });
-
   return (
-    <article className="max-w-7xl w-full mx-auto mt-10 px-4 sm:px-6">
-      <Card>
-        <CardHeader className="sr-only">
-          <CardTitle>Jobs</CardTitle>
-          <CardDescription>
-            Manage your job postings and applications
-          </CardDescription>
-        </CardHeader>
-        <CardContent className={cn("p-4 w-full", { "h-96": !jobs.length })}>
-          {jobs.length ? (
-            <DataTable columns={columns} data={jobs} />
-          ) : (
-            <div className="flex flex-col gap-1 items-center justify-center w-full h-full rounded-lg border border-dashed shadow-sm p-4 text-center">
-              <h3 className="text-2xl font-semibold tracking-tight">
-                No jobs found
-              </h3>
-              <p className="text-muted-foreground text-sm">
-                Create a new job to get started
-              </p>
-              <CreateJob>
-                <Button className="mt-3">Create a new job</Button>
-              </CreateJob>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </article>
+    <>
+      <header className="w-full border-b bg-background">
+        <div className="flex justify-between max-w-7xl mx-auto px-4 sm:px-6 py-14">
+          <h1 className="text-3xl font-semibold tracking-tight">Jobs</h1>
+          <Link href="/jobs/new" className={buttonVariants()}>
+            New Job
+          </Link>
+        </div>
+      </header>
+      <div className="max-w-7xl w-full mx-auto mt-10 px-4 sm:px-6">
+        <Tabs
+          defaultValue={searchParams.tab === "archive" ? "archive" : "open"}
+        >
+          <TabsList>
+            <TabsTrigger value="open">
+              <Link href="/jobs">Open</Link>
+            </TabsTrigger>
+            <TabsTrigger value="archive">
+              <Link
+                href={{
+                  pathname: "/jobs",
+                  query: { tab: "archive" },
+                }}
+              >
+                Archive
+              </Link>
+            </TabsTrigger>
+          </TabsList>
+          <TabsContent value="open">
+            <OpenTable />
+          </TabsContent>
+          <TabsContent value="archive">
+            <ArchiveTable />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </>
   );
 }

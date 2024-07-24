@@ -8,10 +8,8 @@ export const jobSchema = z.object({
   body: z.string(),
   ownerId: z.string(),
   status: JobStatus,
-  xata_id: z.string(),
-  xata_version: z.number(),
-  xata_createdat: z.date(),
-  xata_updatedat: z.date(),
+  createdAt: z.date(),
+  updatedAt: z.date(),
 });
 
 const jobWithCountSchema = jobSchema.extend({
@@ -20,24 +18,20 @@ const jobWithCountSchema = jobSchema.extend({
   }),
 });
 
-export const createJobSchema = jobSchema.omit({
+export const createJobSchema = jobSchema.pick({
+  title: true,
+  body: true,
+});
+
+export const deleteJobSchema = jobSchema.pick({
   id: true,
-  xata_id: true,
-  xata_version: true,
-  xata_createdat: true,
-  xata_updatedat: true,
-  status: true,
   ownerId: true,
 });
 
-export const updateJobSchema = jobSchema.omit({
-  xata_id: true,
-  xata_version: true,
-  xata_createdat: true,
-  xata_updatedat: true,
-});
+export const updateJobSchema = jobSchema.omit({});
 
 export type JobType = z.infer<typeof jobSchema>;
 export type createJobType = z.infer<typeof createJobSchema>;
 export type updateJobType = z.infer<typeof updateJobSchema>;
+export type deleteJobType = z.infer<typeof deleteJobSchema>;
 export type JobWithCount = z.infer<typeof jobWithCountSchema>;
