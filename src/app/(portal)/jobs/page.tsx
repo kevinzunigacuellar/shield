@@ -1,7 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import type { Metadata } from "next";
-
+import { CirclePlus } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import OpenTable from "@/components/tables/open-job-table";
 import ArchiveTable from "@/components/tables/archive-job-table";
@@ -31,7 +31,8 @@ export default async function JobsPage({
         <div className="flex justify-between max-w-7xl mx-auto px-4 sm:px-6 py-14">
           <h1 className="text-3xl font-semibold tracking-tight">Jobs</h1>
           <Link href="/new" className={buttonVariants()}>
-            Create Job
+            <CirclePlus className="size-4 mr-2" />
+            Add Job
           </Link>
         </div>
       </header>

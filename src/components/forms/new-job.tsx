@@ -12,13 +12,7 @@ import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ToolbarButton } from "@/components/toolbar-button";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import {
   Heading2Icon,
   Heading3Icon,
@@ -27,48 +21,25 @@ import {
   ListOrdered,
   List,
 } from "lucide-react";
-import { updateJob } from "@/actions/job";
+import { createJob } from "@/actions/job";
 
-export function JobForm({
-  title,
-  body,
-  status,
-  id,
-  ownerId,
-}: {
-  title: string;
-  body: string;
-  status: "OPEN" | "CLOSED";
-  id: string;
-  ownerId: string;
-}) {
+export function JobForm() {
   const form = useForm({
     defaultValues: {
-      title: title,
-      body: body,
-      status: status,
+      title: "",
+      body: "",
     },
     onSubmit: async ({ value }) => {
-      toast.promise(
-        updateJob({
-          id,
-          title: value.title,
-          body: value.body,
-          status: value.status,
-          ownerId,
-        }),
-        {
-          loading: "Updating job...",
-          error: (e) => `Error: ${e.message}`,
-          success: "Job updated successfully",
-        },
-      );
+      toast.promise(createJob(value), {
+        loading: "Creating job...",
+        success: "Job created!",
+        error: "Could not create job.",
+      });
     },
     validatorAdapter: zodValidator(),
   });
 
   const editor = useEditor({
-    content: JSON.parse(body),
     extensions: [
       StarterKit.configure({
         heading: {
@@ -230,37 +201,16 @@ export function JobForm({
           </div>
         )}
       </form.Field>
-      <form.Field name="status">
-        {(field) => (
-          <div className="flex flex-col gap-2">
-            <Label htmlFor={field.name}>Status</Label>
-            <Select
-              value={field.state.value}
-              onValueChange={(value) =>
-                field.setValue(value as "OPEN" | "CLOSED")
-              }
-            >
-              <SelectTrigger id={field.name}>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent position="popper">
-                <SelectItem value="OPEN">Open</SelectItem>
-                <SelectItem value="CLOSED">Closed</SelectItem>
-              </SelectContent>
-            </Select>
-            <p className="text-sm text-muted-foreground">
-              The status of the job. If the job is closed, it will not be
-              displayed to applicants.
-            </p>
-          </div>
-        )}
-      </form.Field>
       <form.Subscribe
         selector={(state) => [state.canSubmit, state.isSubmitting]}
       >
         {([canSubmit]) => (
-          <Button type="submit" className="max-w-fit" disabled={!canSubmit}>
-            Update Job
+          <Button
+            type="submit"
+            className="max-w-fit ml-auto"
+            disabled={!canSubmit}
+          >
+            Add Job
           </Button>
         )}
       </form.Subscribe>

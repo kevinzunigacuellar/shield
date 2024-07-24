@@ -72,7 +72,7 @@ export const columns: ColumnDef<JobType>[] = [
             <DropdownMenuContent align="end">
               <DropdownMenuLabel>Actions</DropdownMenuLabel>
               <DropdownMenuItem asChild>
-                <Link href={`/jobs/${job.id}/edit`}>Edit</Link>
+                <Link href={`/jobs/${job.id}/settings`}>Edit</Link>
               </DropdownMenuItem>
               <AlertDialogTrigger asChild>
                 <DropdownMenuItem>Delete</DropdownMenuItem>

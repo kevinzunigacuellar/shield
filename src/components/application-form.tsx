@@ -82,6 +82,9 @@ export default function ApplicationForm({ jobId }: { jobId: string }) {
     onUploadError: (error) => {
       // TODO: Handle error
     },
+    onUploadProgress: (progress) => {
+      // TODO: Handle progress
+    },
   });
 
   return (

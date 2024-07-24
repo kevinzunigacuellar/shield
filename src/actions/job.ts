@@ -37,7 +37,8 @@ export async function createJob(data: createJobType) {
     },
   });
 
-  revalidatePath(`/jobs`);
+  revalidatePath("/jobs");
+  redirect("/jobs");
 }
 
 export async function updateJob(data: updateJobType) {
@@ -52,7 +53,7 @@ export async function updateJob(data: updateJobType) {
     redirect("/sign-in");
   }
 
-  const { id, title, body, ownerId } = parsed.data;
+  const { id, title, body, ownerId, status } = parsed.data;
 
   const currentUserId = orgId ?? userId;
 
@@ -60,17 +61,22 @@ export async function updateJob(data: updateJobType) {
     throw new Error("You are not the owner of this job.");
   }
 
-  await prisma.job.update({
-    where: {
-      id: id,
-      ownerId: orgId ?? userId,
-    },
-    data: {
-      title,
-      body,
-      updatedAt: new Date(),
-    },
-  });
+  try {
+    await prisma.job.update({
+      where: {
+        id: id,
+        ownerId: orgId ?? userId,
+      },
+      data: {
+        title,
+        body,
+        status,
+        updatedAt: new Date(),
+      },
+    });
+  } catch (e) {
+    throw new Error("Something went wrong, please try again later.");
+  }
 
   revalidatePath(`/jobs`);
   redirect(`/jobs`);

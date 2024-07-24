@@ -15,6 +15,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { CirclePlus } from "lucide-react";
 
 export default async function OpenTable() {
   const { userId, orgId } = auth();
@@ -64,7 +65,7 @@ export default async function OpenTable() {
               Create a job to get started
             </p>
             <Link href="/new" className={buttonVariants({ className: "mt-3" })}>
-              Create Job
+              <CirclePlus className="size-4 mr-2" /> Add Job
             </Link>
           </div>
         )}
