@@ -12,28 +12,35 @@ import {
 import ApplicationForm from "@/components/application-form";
 import StarterKit from "@tiptap/starter-kit";
 import { generateHTML } from "@tiptap/html";
-type Props = {
-  params: { id: string };
+
+export const metadata: Metadata = {
+  title: "Job",
+  description: "Looking for a job? Apply today!",
 };
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const job = await prisma.job.findUnique({
-    where: {
-      id: params.id,
-    },
-    select: {
-      id: true,
-      title: true,
-    },
-  });
+// type Props = {
+//   params: { id: string };
+// };
 
-  return {
-    title: job?.title || "Job not found",
-    description:
-      `Looking for a job? Check out this job posting for ${job?.title}` ||
-      "Job not found",
-  };
-}
+// export async function generateMetadata({ params }: Props): Promise<Metadata> {
+//   const job = await prisma.job.findUnique({
+//     where: {
+//       id: params.id,
+//     },
+//     select: {
+//       title: true,
+//     },
+//   });
+
+//   if (!job) {
+//     notFound();
+//   }
+
+//   return {
+//     title: job.title,
+//     description: `Looking for a job? Apply for ${job.title} today!`,
+//   }
+// }
 
 export default async function JobPage({ params }: { params: { id: string } }) {
   const job = await prisma.job.findUnique({

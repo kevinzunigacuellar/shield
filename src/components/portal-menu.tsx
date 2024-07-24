@@ -25,7 +25,7 @@ export default function HeaderMenu() {
       <div className="flex items-center gap-4 justify-between min-h-16 px-4 sm:px-6">
         <div className="hidden flex-col gap-4 text-lg font-medium md:flex md:flex-row md:items-center md:text-sm">
           <Link
-            href="/"
+            href="/jobs"
             className="flex items-center gap-2 text-lg font-semibold md:text-base"
           >
             <Shield className="h-6 w-6 fill-black" />

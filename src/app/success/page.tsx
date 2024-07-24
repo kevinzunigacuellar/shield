@@ -5,7 +5,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Application Submitted | Shield",
+  title: "Application Submitted",
   description:
     "Your application has been submitted successfully. Thanks for applying!",
 };

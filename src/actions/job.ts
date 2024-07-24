@@ -73,6 +73,7 @@ export async function updateJob(data: updateJobType) {
   });
 
   revalidatePath(`/jobs`);
+  redirect(`/jobs`);
 }
 
 export async function closeJob({

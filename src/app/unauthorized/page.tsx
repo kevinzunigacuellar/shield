@@ -6,7 +6,7 @@ import type { Metadata } from "next";
 export const dynamic = "force-static";
 
 export const metadata: Metadata = {
-  title: "Unauthorized Access | Shield",
+  title: "Unauthorized Access",
   description: "You do not have permission to view the requested content",
 };
 

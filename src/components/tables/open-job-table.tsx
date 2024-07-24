@@ -22,6 +22,7 @@ export default async function OpenTable() {
   if (!userId) {
     return redirect("/sign-in");
   }
+
   const jobs = await prisma.job.findMany({
     where: {
       ownerId: orgId ?? userId,
@@ -51,7 +52,7 @@ export default async function OpenTable() {
           Manage your job postings and applications
         </CardDescription>
       </CardHeader>
-      <CardContent className={cn({ "h-96": !jobs.length })}>
+      <CardContent className={cn({ "h-80": !jobs.length })}>
         {jobs.length ? (
           <DataTable columns={columns} data={jobs} />
         ) : (
@@ -60,10 +61,10 @@ export default async function OpenTable() {
               No jobs found
             </h3>
             <p className="text-muted-foreground text-sm">
-              Create a new job to get started
+              Create a job to get started
             </p>
             <Link href="/new" className={buttonVariants({ className: "mt-3" })}>
-              Create a new job
+              Create Job
             </Link>
           </div>
         )}

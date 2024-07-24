@@ -28,7 +28,10 @@ export const deleteJobSchema = jobSchema.pick({
   ownerId: true,
 });
 
-export const updateJobSchema = jobSchema.omit({});
+export const updateJobSchema = jobSchema.omit({
+  createdAt: true,
+  updatedAt: true,
+});
 
 export type JobType = z.infer<typeof jobSchema>;
 export type createJobType = z.infer<typeof createJobSchema>;

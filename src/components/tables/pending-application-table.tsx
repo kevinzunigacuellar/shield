@@ -45,7 +45,7 @@ export default async function PendingApplicationTable({
         <CardTitle>Pending Applications</CardTitle>
         <CardDescription>Manage your pending applications</CardDescription>
       </CardHeader>
-      <CardContent className={cn({ "h-96": !applications.length })}>
+      <CardContent className={cn({ "h-80": !applications.length })}>
         {applications.length ? (
           <DataTable columns={columns} data={applications} />
         ) : (

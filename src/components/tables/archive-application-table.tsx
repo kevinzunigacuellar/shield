@@ -42,7 +42,7 @@ export default async function ArchiveApplicationTable({
         <CardTitle>Archived Applications</CardTitle>
         <CardDescription>Manage your archived applications</CardDescription>
       </CardHeader>
-      <CardContent className={cn({ "h-96": !applications.length })}>
+      <CardContent className={cn({ "h-80": !applications.length })}>
         {applications.length ? (
           <DataTable columns={columns} data={applications} />
         ) : (

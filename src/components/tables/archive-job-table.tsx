@@ -43,7 +43,7 @@ export default async function ArchiveTable() {
         <CardTitle>Closed Jobs</CardTitle>
         <CardDescription>Manage your archived job postings</CardDescription>
       </CardHeader>
-      <CardContent className={cn({ "h-96": !jobs.length })}>
+      <CardContent className={cn({ "h-80": !jobs.length })}>
         {jobs.length ? (
           <DataTable columns={columns} data={jobs} />
         ) : (

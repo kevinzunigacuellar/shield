@@ -2,7 +2,7 @@ import { SignIn } from "@clerk/nextjs";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Sign in | Shield",
+  title: "Sign in",
   description: "Sign in to your Shield account",
 };
 

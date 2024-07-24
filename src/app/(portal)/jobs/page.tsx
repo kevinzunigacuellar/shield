@@ -9,7 +9,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Jobs | Shield",
+  title: "Jobs",
   description: "Manage your job postings and applications",
 };
 
@@ -30,8 +30,8 @@ export default async function JobsPage({
       <header className="w-full border-b bg-background">
         <div className="flex justify-between max-w-7xl mx-auto px-4 sm:px-6 py-14">
           <h1 className="text-3xl font-semibold tracking-tight">Jobs</h1>
-          <Link href="/jobs/new" className={buttonVariants()}>
-            New Job
+          <Link href="/new" className={buttonVariants()}>
+            Create Job
           </Link>
         </div>
       </header>

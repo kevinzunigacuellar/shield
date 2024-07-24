@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { buttonVariants } from "@/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "Page Not Found | Shield",
+  title: "Page Not Found",
   description: "The page you requested could not be found",
 };
 
