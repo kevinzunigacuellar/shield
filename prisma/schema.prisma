@@ -16,6 +16,7 @@ model Application {
   email          String
   status         ApplicationStatus @default(PENDING)
   score          Int?
+  aiExplanation  String?
   job            Job               @relation(fields: [jobId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   createdAt      DateTime          @default(now())
   updatedAt      DateTime          @default(now())

@@ -1,15 +1,17 @@
 import { inngest } from "./client";
-import { CohereClient } from "cohere-ai";
+import { google } from "@ai-sdk/google";
 import { Resend } from "resend";
 import { generateText } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
+import { generateObject } from "ai";
+import { z } from "zod";
 
 export const scoreApplicantResume = inngest.createFunction(
-  { id: "score-resume" }, // Each function should have a unique ID
-  { event: "app/application.sent" }, // When an event by this name received, this function will run
+  { id: "score-resume" },
+  { event: "app/application.sent" },
 
   async ({ event, step, prisma }) => {
-    const appjobData = await step.run("fetch-application-and-job", async () => {
+    const appjobData = await step.run("get-application-data", async () => {
       const data = await prisma.application.findUnique({
         where: {
           id: event.data.applicationId,
@@ -33,44 +35,40 @@ export const scoreApplicantResume = inngest.createFunction(
     });
 
     const pdfText = await step.run("extract-text-from-pdf", async () => {
-      const pdfBuffer = await fetch(appjobData.resume).then((res) =>
-        res.arrayBuffer(),
+      const res = await fetch(
+        `https://ocr-1en6.onrender.com/ocr?url=${appjobData.resume}`,
       );
-
-      const res = await fetch("https://api.dpdf.io/v1.0/pdf-text", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/pdf",
-          Authorization: `Bearer ${process.env.PDF_API_KEY}`,
-        },
-        body: pdfBuffer,
-      });
-
-      const json = (await res.json()) as { text: string }[];
-      return json
-        .map((x) => x.text)
-        .join("\n\n")
-        .replace(/\n/g, " ");
+      const { text }: { text: string } = await res.json();
+      return text;
     });
 
-    const reply = await step.run("calculate-score", async () => {
-      const cohere = new CohereClient({
-        token: process.env.COHERE_API_KEY,
+    const evaluation = await step.run("evaluate-candidate", async () => {
+      const jobPostText = generateText(JSON.parse(appjobData.job.body), [
+        StarterKit,
+      ]);
+
+      const { object } = await generateObject({
+        model: google("models/gemini-1.5-pro-latest"),
+        schema: z.object({
+          evaluation: z.object({
+            explanation: z.string(),
+            score: z.number().min(0).max(100),
+          }),
+        }),
+        prompt: `Based on the job post provided: Job Title: ${appjobData.job.title} Job Description: ${jobPostText} and the resume provided: ${pdfText} Evaluate the candidate's resume against the job post and generate a score from 0 to 100 indicating the candidate's fit for the job. Additionally, provide a detailed explanation for the score, highlighting the key factors that influenced the evaluation.`,
       });
-      const text = generateText(JSON.parse(appjobData.job.body), [StarterKit]);
-      const response = await cohere.chat({
-        message: `Based on the job post provided: ${appjobData.job.title} ${text} and the resume provided: ${pdfText}, generate a score from 0 to 100 indicating if the candidate is a fit for the job. Only output the score number`,
-      });
-      return response.text;
+      
+      return object.evaluation;
     });
 
-    const score = await step.run("insert-score-to-application", async () => {
+    const score = await step.run("update-application", async () => {
       return await prisma.application.update({
         where: {
           id: event.data.applicationId,
         },
         data: {
-          score: parseInt(reply),
+          score: evaluation.score,
+          aiExplanation: evaluation.explanation,
         },
       });
     });
@@ -78,6 +76,7 @@ export const scoreApplicantResume = inngest.createFunction(
     return {
       id: score.id,
       score: score.score,
+      explanation: score.aiExplanation,
     };
   },
 );
