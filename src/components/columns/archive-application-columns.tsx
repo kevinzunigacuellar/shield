@@ -103,10 +103,15 @@ export const columns: ColumnDef<ApplicationType>[] = [
                   gridType="circle"
                   radialLines={false}
                   stroke="none"
-                  className="first:fill-muted last:fill-background"
+                  className="first:fill-muted last:fill-background cursor-pointer"
                   polarRadius={[17, 13]}
                 />
-                <RadialBar dataKey="score" background cornerRadius={10} />
+                <RadialBar
+                  dataKey="score"
+                  background
+                  cornerRadius={10}
+                  className="cursor-pointer"
+                />
                 <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
                   <Label
                     content={({ viewBox }) => {
@@ -117,6 +122,7 @@ export const columns: ColumnDef<ApplicationType>[] = [
                             y={viewBox.cy}
                             textAnchor="middle"
                             dominantBaseline="middle"
+                            className="cursor-pointer"
                           >
                             <tspan
                               x={viewBox.cx}
