@@ -55,7 +55,7 @@ export const scoreApplicantResume = inngest.createFunction(
             score: z.number().min(0).max(100),
           }),
         }),
-        prompt: `Based on the job post provided: Job Title: ${appjobData.job.title} Job Description: ${jobPostText} and the resume provided: ${pdfText} Evaluate the candidate's resume against the job post and generate a score from 0 to 100 indicating the candidate's fit for the job. Additionally, provide a detailed explanation for the score, highlighting the key factors that influenced the evaluation.`,
+        prompt: `Based on the job post provided: Job Title: ${appjobData.job.title} Job Description: ${jobPostText} and the resume provided: ${pdfText} Evaluate the candidate's resume against the job post and generate a score from 0 to 100 indicating the candidate's fit for the job. Additionally, provide a concise explanation for the score, highlighting the key factors that influenced the evaluation.`,
       });
 
       return object.evaluation;

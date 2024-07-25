@@ -13,6 +13,14 @@ import {
   RadialBarChart,
 } from "recharts";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 
 export const columns: ColumnDef<ApplicationType>[] = [
   {
@@ -51,7 +59,6 @@ export const columns: ColumnDef<ApplicationType>[] = [
     },
     cell: ({ row }) => {
       const application = row.original;
-
       const getRingColor = (score = 10) => {
         if (score >= 90) {
           return "hsl(var(--chart-2))";
@@ -79,53 +86,134 @@ export const columns: ColumnDef<ApplicationType>[] = [
       } satisfies ChartConfig;
 
       return (
-        <ChartContainer config={chartConfig} className="aspect-square max-h-10">
-          <RadialBarChart
-            data={chartData}
-            startAngle={0}
-            endAngle={score * 3.6}
-            innerRadius={15}
-            outerRadius={25}
-          >
-            <PolarGrid
-              gridType="circle"
-              radialLines={false}
-              stroke="none"
-              className="first:fill-muted last:fill-background"
-              polarRadius={[17, 13]}
-            />
-            <RadialBar dataKey="score" background cornerRadius={10} />
-            <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
-              <Label
-                content={({ viewBox }) => {
-                  if (viewBox && "cx" in viewBox && "cy" in viewBox) {
-                    return (
-                      <text
-                        x={viewBox.cx}
-                        y={viewBox.cy}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
+        <Sheet>
+          <SheetTrigger asChild>
+            <ChartContainer
+              config={chartConfig}
+              className="aspect-square max-h-10"
+            >
+              <RadialBarChart
+                data={chartData}
+                startAngle={0}
+                endAngle={score * 3.6}
+                innerRadius={15}
+                outerRadius={25}
+              >
+                <PolarGrid
+                  gridType="circle"
+                  radialLines={false}
+                  stroke="none"
+                  className="first:fill-muted last:fill-background cursor-pointer"
+                  polarRadius={[17, 13]}
+                />
+                <RadialBar
+                  dataKey="score"
+                  background
+                  cornerRadius={10}
+                  className="cursor-pointer"
+                />
+                <PolarRadiusAxis tick={false} tickLine={false} axisLine={false}>
+                  <Label
+                    content={({ viewBox }) => {
+                      if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                        return (
+                          <text
+                            x={viewBox.cx}
+                            y={viewBox.cy}
+                            textAnchor="middle"
+                            dominantBaseline="middle"
+                            className="cursor-pointer"
+                          >
+                            <tspan
+                              x={viewBox.cx}
+                              y={viewBox.cy}
+                              className="fill-foreground text-xs font-semibold"
+                            >
+                              {score.toLocaleString()}
+                            </tspan>
+                            <tspan
+                              x={viewBox.cx}
+                              y={(viewBox.cy || 0) + 24}
+                              className="fill-muted-foreground"
+                            ></tspan>
+                          </text>
+                        );
+                      }
+                    }}
+                  />
+                </PolarRadiusAxis>
+              </RadialBarChart>
+            </ChartContainer>
+          </SheetTrigger>
+          <SheetContent>
+            <SheetHeader>
+              <SheetTitle>Score breakdown</SheetTitle>
+              <SheetDescription>
+                <div className="flex flex-col">
+                  <ChartContainer
+                    config={chartConfig}
+                    className="aspect-square max-h-64"
+                  >
+                    <RadialBarChart
+                      data={chartData}
+                      startAngle={0}
+                      endAngle={score * 3.6}
+                      innerRadius={80}
+                      outerRadius={110}
+                    >
+                      <PolarGrid
+                        gridType="circle"
+                        radialLines={false}
+                        stroke="none"
+                        className="first:fill-muted last:fill-background"
+                        polarRadius={[86, 74]}
+                      />
+                      <RadialBar dataKey="score" background cornerRadius={10} />
+                      <PolarRadiusAxis
+                        tick={false}
+                        tickLine={false}
+                        axisLine={false}
                       >
-                        <tspan
-                          x={viewBox.cx}
-                          y={viewBox.cy}
-                          className="fill-foreground text-xs font-semibold"
-                        >
-                          {score.toLocaleString()}
-                        </tspan>
-                        <tspan
-                          x={viewBox.cx}
-                          y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
-                        ></tspan>
-                      </text>
-                    );
-                  }
-                }}
-              />
-            </PolarRadiusAxis>
-          </RadialBarChart>
-        </ChartContainer>
+                        <Label
+                          content={({ viewBox }) => {
+                            if (viewBox && "cx" in viewBox && "cy" in viewBox) {
+                              return (
+                                <text
+                                  x={viewBox.cx}
+                                  y={viewBox.cy}
+                                  textAnchor="middle"
+                                  dominantBaseline="middle"
+                                >
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={viewBox.cy}
+                                    className="fill-foreground text-4xl font-semibold"
+                                  >
+                                    {score.toLocaleString()}
+                                  </tspan>
+                                  <tspan
+                                    x={viewBox.cx}
+                                    y={(viewBox.cy || 0) + 24}
+                                    className="fill-muted-foreground"
+                                  >
+                                    Score
+                                  </tspan>
+                                </text>
+                              );
+                            }
+                          }}
+                        />
+                      </PolarRadiusAxis>
+                    </RadialBarChart>
+                  </ChartContainer>
+                </div>
+              </SheetDescription>
+            </SheetHeader>
+            <p className="text-sm py-2 leading-relaxed">
+              {application.aiExplanation}
+            </p>
+          </SheetContent>
+        </Sheet>
       );
     },
   },
