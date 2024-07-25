@@ -12,6 +12,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@ai-sdk/google": "^0.0.30",
     "@clerk/nextjs": "^5.2.2",
     "@prisma/client": "^5.16.1",
     "@radix-ui/react-alert-dialog": "^1.1.1",
@@ -37,6 +38,7 @@
     "@tiptap/starter-kit": "^2.4.0",
     "@uploadthing/react": "^6.7.2",
     "@xata.io/client": "^0.29.5",
+    "ai": "^3.2.36",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cohere-ai": "^7.10.6",
