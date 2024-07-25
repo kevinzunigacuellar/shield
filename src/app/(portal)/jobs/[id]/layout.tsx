@@ -4,6 +4,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
 import { auth } from "@clerk/nextjs/server";
+import { buttonVariants } from "@/components/ui/button";
 
 export default async function JobIdLayout({
   children,
@@ -41,17 +42,25 @@ export default async function JobIdLayout({
   return (
     <>
       <header className="w-full bg-background border-b">
-        <div className="flex flex-col gap-3 max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+        <div className="flex justify-between items-center gap-3 max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
+          <div>
+            <Link
+              href="/jobs"
+              className="flex w-fit items-center text-sm gap-1 text-muted-foreground hover:text-primary"
+            >
+              <ArrowLeft className="size-4" />
+              <span>Back to Jobs</span>
+            </Link>
+            <h1 className="text-3xl font-semibold tracking-tight">
+              {application.title}
+            </h1>
+          </div>
           <Link
-            href="/jobs"
-            className="flex w-fit items-center text-sm gap-1 text-muted-foreground hover:text-primary"
+            href={`/post/${params.id}`}
+            className={buttonVariants({ size: "lg" })}
           >
-            <ArrowLeft className="size-4" />
-            <span>Back to Jobs</span>
+            View Job Post
           </Link>
-          <h1 className="text-3xl font-semibold tracking-tight">
-            {application.title}
-          </h1>
         </div>
         <nav className="px-4 flex max-w-7xl w-full mx-auto">
           {navigation.map((item) => (
