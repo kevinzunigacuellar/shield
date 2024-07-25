@@ -11,6 +11,7 @@ const applicationSchema = z.object({
   status: ApplicationStatus,
   createdAt: z.date(),
   updatedAt: z.date(),
+  aiExplanation: z.string().optional(),
   jobId: z.string(),
   job: jobSchema,
 });
