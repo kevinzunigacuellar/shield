@@ -1,7 +1,7 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, LoaderCircle } from "lucide-react";
 import { DataTableColumnHeader } from "@/components/column-header";
 import Link from "next/link";
 import type { ApplicationType } from "@/schema/application";
@@ -63,21 +63,27 @@ export const columns: ColumnDef<ApplicationType>[] = [
           return "hsl(var(--chart-1))";
         }
       };
+
+      const score = application.score;
+      if (!score) return <LoaderCircle className="size-4 animate-spin" />;
+
       const chartData = [
-        { score: application.score!, fill: "var(--color-score)" },
+        { score: application.score, fill: "var(--color-score)" },
       ];
+
       const chartConfig = {
         score: {
           label: "Score",
           color: getRingColor(application.score),
         },
       } satisfies ChartConfig;
+
       return (
         <ChartContainer config={chartConfig} className="aspect-square max-h-10">
           <RadialBarChart
             data={chartData}
             startAngle={0}
-            endAngle={chartData[0].score * 3.6}
+            endAngle={score * 3.6}
             innerRadius={15}
             outerRadius={25}
           >
@@ -105,7 +111,7 @@ export const columns: ColumnDef<ApplicationType>[] = [
                           y={viewBox.cy}
                           className="fill-foreground text-xs font-semibold"
                         >
-                          {chartData[0].score.toLocaleString()}
+                          {score.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}

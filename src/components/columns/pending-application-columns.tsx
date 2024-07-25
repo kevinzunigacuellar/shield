@@ -2,8 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, MoreHorizontal } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { ExternalLink, LoaderCircle, MoreHorizontal } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -74,21 +73,27 @@ export const columns: ColumnDef<ApplicationType>[] = [
           return "hsl(var(--chart-1))";
         }
       };
+
+      const score = application.score;
+      if (!score) return <LoaderCircle className="size-4 animate-spin" />;
+
       const chartData = [
-        { score: application.score!, fill: "var(--color-score)" },
+        { score: application.score, fill: "var(--color-score)" },
       ];
+
       const chartConfig = {
         score: {
           label: "Score",
           color: getRingColor(application.score),
         },
       } satisfies ChartConfig;
+
       return (
         <ChartContainer config={chartConfig} className="aspect-square max-h-10">
           <RadialBarChart
             data={chartData}
             startAngle={0}
-            endAngle={chartData[0].score * 3.6}
+            endAngle={score * 3.6}
             innerRadius={15}
             outerRadius={25}
           >
@@ -116,7 +121,7 @@ export const columns: ColumnDef<ApplicationType>[] = [
                           y={viewBox.cy}
                           className="fill-foreground text-xs font-semibold"
                         >
-                          {chartData[0].score.toLocaleString()}
+                          {score.toLocaleString()}
                         </tspan>
                         <tspan
                           x={viewBox.cx}
