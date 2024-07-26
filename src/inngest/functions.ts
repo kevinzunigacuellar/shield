@@ -36,7 +36,7 @@ export const scoreApplicantResume = inngest.createFunction(
 
     const pdfText = await step.run("extract-text-from-pdf", async () => {
       const res = await fetch(
-        `https://ocr-1en6.onrender.com/ocr?url=${appjobData.resume}`,
+        `https://ocr-rho.vercel.app/ocr?url=${appjobData.resume}`,
       );
       const { text }: { text: string } = await res.json();
       return text;
