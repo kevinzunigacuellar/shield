@@ -5,6 +5,7 @@ import { generateText } from "@tiptap/core";
 import StarterKit from "@tiptap/starter-kit";
 import { generateObject } from "ai";
 import { z } from "zod";
+import { NonRetriableError } from "inngest";
 
 export const scoreApplicantResume = inngest.createFunction(
   { id: "score-resume" },
@@ -36,7 +37,7 @@ export const scoreApplicantResume = inngest.createFunction(
 
     const pdfText = await step.run("extract-text-from-pdf", async () => {
       const res = await fetch(
-        `https://ocr-rho.vercel.app/ocr?url=${appjobData.resume}`,
+        `https://ocr-rho.vercel.app/ocr?url=${appjobData.resume}`
       );
       const { text }: { text: string } = await res.json();
       return text;
@@ -78,7 +79,7 @@ export const scoreApplicantResume = inngest.createFunction(
       score: score.score,
       explanation: score.aiExplanation,
     };
-  },
+  }
 );
 
 export const sendConfirmationEmail = inngest.createFunction(
@@ -91,10 +92,17 @@ export const sendConfirmationEmail = inngest.createFunction(
         where: {
           id: event.data.applicationId,
         },
+        include: {
+          job: {
+            select: {
+              title: true,
+            },
+          },
+        },
       });
 
       if (!application) {
-        throw new Error("Application not found");
+        throw new NonRetriableError("Application not found");
       }
 
       return application;
@@ -104,11 +112,11 @@ export const sendConfirmationEmail = inngest.createFunction(
       const resend = new Resend(process.env.RESEND_API_KEY);
 
       return resend.emails.send({
-        from: "Shield <onboarding@resend.dev>",
-        to: applicationData.email,
+        from: "Shield <noreply@shield.kevinzunigacuellar.com>",
+        to: ["delivered@resend.dev"],
         subject: "Application Received",
-        text: `Your application has been received. Thank you for applying!`,
+        html: `<h3>Hi ${applicationData.name},</h3><p>Thank you for submitting your application for ${applicationData.job.title}. We will review your application and get back to you as soon as possible.</p><p>Best regards,</p><p>Shield Team</p>`,
       });
     });
-  },
+  }
 );
