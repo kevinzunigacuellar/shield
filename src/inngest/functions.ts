@@ -113,7 +113,7 @@ export const sendConfirmationEmail = inngest.createFunction(
 
       return resend.emails.send({
         from: "Shield <noreply@shield.kevinzunigacuellar.com>",
-        to: ["delivered@resend.dev"],
+        to: applicationData.email,
         subject: "Application Received",
         html: `<h3>Hi ${applicationData.name},</h3><p>Thank you for submitting your application for ${applicationData.job.title}. We will review your application and get back to you as soon as possible.</p><p>Best regards,</p><p>Shield Team</p>`,
       });
