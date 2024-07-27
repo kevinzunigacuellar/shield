@@ -43,7 +43,7 @@ export default async function JobIdLayout({
     <>
       <header className="w-full bg-background border-b">
         <div className="flex justify-between items-center gap-3 max-w-7xl mx-auto px-4 sm:px-6 pt-14 pb-10">
-          <div>
+          <div className="flex flex-col gap-2">
             <Link
               href="/jobs"
               className="flex w-fit items-center text-sm gap-1 text-muted-foreground hover:text-primary"

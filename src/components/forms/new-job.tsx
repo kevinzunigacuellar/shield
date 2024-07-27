@@ -7,20 +7,18 @@ import { FieldInfo } from "@/components/field-info";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Separator } from "@/components/ui/separator";
 import { useEditor, EditorContent } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import { ToolbarButton } from "@/components/toolbar-button";
 import { Button } from "@/components/ui/button";
-
 import {
-  Heading2Icon,
-  Heading3Icon,
-  Bold,
-  Italic,
-  ListOrdered,
-  List,
-} from "lucide-react";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Bold, Italic } from "lucide-react";
 import { createJob } from "@/actions/job";
 
 export function JobForm() {
@@ -47,6 +45,10 @@ export function JobForm() {
         },
       }),
     ],
+    onUpdate: ({ editor }) => {
+      form.setFieldValue("body", JSON.stringify(editor.getJSON()));
+      form.validateField("body", "change");
+    },
     editorProps: {
       attributes: {
         class:
@@ -54,16 +56,26 @@ export function JobForm() {
         id: "body",
       },
       handleDOMEvents: {
-        input: (editor) => {
-          form.setFieldValue("body", JSON.stringify(editor.state.toJSON().doc));
-          form.validateField("body", "change");
-        },
         blur: () => {
           form.validateField("body", "change");
         },
       },
     },
   });
+
+  const getSelectValue = () => {
+    if (editor?.isActive("heading", { level: 2 })) {
+      return "h2";
+    } else if (editor?.isActive("heading", { level: 3 })) {
+      return "h3";
+    } else if (editor?.isActive("orderedList")) {
+      return "ol";
+    } else if (editor?.isActive("bulletList")) {
+      return "ul";
+    } else {
+      return "text";
+    }
+  };
 
   return (
     <form
@@ -122,30 +134,48 @@ export function JobForm() {
               Description
             </Label>
             <div className="min-h-[80px] w-full flex flex-col border rounded-md overflow-hidden focus-within:ring-1 focus-within:ring-ring">
-              <div className="flex items-center gap-2 bg-background p-1 border-b border-muted">
-                <ToolbarButton
-                  onClick={() =>
-                    editor?.chain().focus().toggleHeading({ level: 2 }).run()
-                  }
-                  disabled={false}
-                  isActive={editor?.isActive("heading", { level: 2 })}
-                  tooltip="Heading 2"
-                  aria-label="Heading 2"
+              <div className="flex items-center bg-background p-1.5 gap-0.5 border-b border-muted">
+                <Select
+                  value={getSelectValue()}
+                  onValueChange={(value) => {
+                    switch (value) {
+                      case "h2":
+                        editor
+                          ?.chain()
+                          .focus()
+                          .toggleHeading({ level: 2 })
+                          .run();
+                        break;
+                      case "h3":
+                        editor
+                          ?.chain()
+                          .focus()
+                          .toggleHeading({ level: 3 })
+                          .run();
+                        break;
+                      case "ol":
+                        editor?.chain().focus().toggleOrderedList().run();
+                        break;
+                      case "ul":
+                        editor?.chain().focus().toggleBulletList().run();
+                        break;
+                      case "text":
+                        editor?.chain().focus().setParagraph().run();
+                        break;
+                    }
+                  }}
                 >
-                  <Heading2Icon className="size-5" />
-                </ToolbarButton>
-                <ToolbarButton
-                  onClick={() =>
-                    editor?.chain().focus().toggleHeading({ level: 3 }).run()
-                  }
-                  disabled={false}
-                  isActive={editor?.isActive("heading", { level: 3 })}
-                  tooltip="Heading 3"
-                  aria-label="Heading 3"
-                >
-                  <Heading3Icon className="size-5" />
-                </ToolbarButton>
-                <Separator orientation="vertical" className="h-6" />
+                  <SelectTrigger className="w-36 mr-1">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="h2">Heading 2</SelectItem>
+                    <SelectItem value="h3">Heading 3</SelectItem>
+                    <SelectItem value="ol">Ordered List</SelectItem>
+                    <SelectItem value="ul">Bullet List</SelectItem>
+                    <SelectItem value="text">Text</SelectItem>
+                  </SelectContent>
+                </Select>
                 <ToolbarButton
                   onClick={() => editor?.chain().focus().toggleBold().run()}
                   disabled={false}
@@ -163,29 +193,6 @@ export function JobForm() {
                   aria-label="Italic"
                 >
                   <Italic className="size-5" />
-                </ToolbarButton>
-                <Separator orientation="vertical" className="mx-2 h-7" />
-                <ToolbarButton
-                  onClick={() =>
-                    editor?.chain().focus().toggleOrderedList().run()
-                  }
-                  disabled={false}
-                  isActive={editor?.isActive("orderedList")}
-                  tooltip="Ordered List"
-                  aria-label="Ordered List"
-                >
-                  <ListOrdered className="size-5" />
-                </ToolbarButton>
-                <ToolbarButton
-                  onClick={() =>
-                    editor?.chain().focus().toggleBulletList().run()
-                  }
-                  disabled={false}
-                  isActive={editor?.isActive("bulletList")}
-                  tooltip="Bullet List"
-                  aria-label="Bullet List"
-                >
-                  <List className="size-5" />
                 </ToolbarButton>
               </div>
               <EditorContent
